@@ -16,8 +16,9 @@ public class ProgramaSAX {
 			SAXParserFactory factoria = SAXParserFactory.newInstance();
 
 			SAXParser analizador = factoria.newSAXParser();
-			analizador.setProperty("http://java.sun.com/xml/jaxp/properties/schemaLanguage",
-					"http://www.w3.org/2001/XMLSchema");
+
+			// analizador.setProperty("http://java.sun.com/xml/jaxp/properties/schemaLanguage",
+			// "http://www.w3.org/2001/XMLSchema");
 
 			ManejadorValidacion manejador = new ManejadorValidacion();
 
@@ -28,7 +29,7 @@ public class ProgramaSAX {
 			for (SAXParseException error : manejador.getErrores()) {
 				System.out.println("Error validación: " + error.getMessage());
 			}
-			System.out.println("Nota media: " + manejador.getNotaMedia());
+
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 			System.out.println("Error sintactico: " + e.getMessage());
 		}

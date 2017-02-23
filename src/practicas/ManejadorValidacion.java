@@ -1,12 +1,7 @@
 package practicas;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -15,53 +10,41 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class ManejadorValidacion extends DefaultHandler {
 
-	private List<SAXParseException> errores = new LinkedList<SAXParseException>();
-	private List<Double> notas = new LinkedList<Double>();
+	private List<SAXParseException> errores;
 
-	private double notaMedia;
-	private int diligencias;
+	public ManejadorValidacion() {
+		errores = new LinkedList<SAXParseException>();
+	}
 
 	@Override
 	public void startDocument() throws SAXException {
 		errores.clear();
-		notas.clear();
-		diligencias = 0;
-		notaMedia = 0;
 	}
 
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+		/*
+		 * System.out.println(qName); for (int i = 0; i <
+		 * attributes.getLength(); i++) { System.out.println("-> " +
+		 * attributes.getLocalName(i) + ": " + attributes.getValue(i)); }
+		 */
 
-		try {
-			if (Objects.equals(qName, "diligencia")) {
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-				String fechaString = attributes.getValue("fecha");
-				Date fecha = sdf.parse(fechaString);
-
-				Calendar calendario = Calendar.getInstance();
-				calendario.add(Calendar.DAY_OF_MONTH, -30);
-				Date fecha30 = calendario.getTime();
-
-				if (fecha30.before(fecha) && fecha.before(new Date())) {
-					diligencias++;
-				}
-			} else if (Objects.equals(qName, "calificacion")) {
-				String nota = attributes.getValue("nota");
-				Double notaNum = Double.parseDouble(nota);
-				notas.add(notaNum);
-			}
-		} catch (ParseException e) {
-			e.printStackTrace();
+		if (qName.equals("img")) {
+			System.out.println("Titulo: " + attributes.getValue("alt"));
+			System.out.println("URL imagen: " + attributes.getValue("src"));
+		} else if (qName.equals("a")) {
+			System.out.println("Enlace: " + attributes.getValue("href"));
 		}
 	}
 
 	@Override
 	public void endDocument() throws SAXException {
-		Double sumnota = 0.0;
-		for(Double d : notas){
-			sumnota += d;
+		if (!errores.isEmpty()) {
+			System.out.println("El documento contiene " + errores.size() + " error(es):");
+			for (SAXParseException e : errores) {
+				System.out.println("-> " + e.getMessage());
+			}
 		}
-		notaMedia = sumnota / notas.size();
 	}
 
 	@Override
@@ -71,21 +54,10 @@ public class ManejadorValidacion extends DefaultHandler {
 
 	@Override
 	public void error(SAXParseException e) throws SAXException {
-		// System.out.println(e.getMessage());
 		errores.add(e);
-		// throw e; //detener analisis
 	}
 
 	public List<SAXParseException> getErrores() {
 		return errores;
 	}
-
-	public int getDiligencias() {
-		return diligencias;
-	}
-
-	public double getNotaMedia() {
-		return notaMedia;
-	}
-
 }
