@@ -1,6 +1,8 @@
 package practicas;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -26,8 +28,20 @@ public class ProgramaSAX {
 					"http://www.rtve.es/m/alacarta/programsbychannel/?media=tve&channel=la1&modl=canales&filterFindPrograms=todas",
 					manejador);
 
-			for (SAXParseException error : manejador.getErrores()) {
-				System.out.println("Error validación: " + error.getMessage());
+			Pattern p = Pattern.compile("/m/alacarta/videos/(.+)/\\?media=tve");
+			Matcher m;
+
+			for (int i = 0; i < manejador.getTitulo().size(); i++) {
+				System.out.println(manejador.getTitulo().get(i));
+				System.out.println(manejador.getEnlace().get(i));
+				System.out.println(manejador.getUrl().get(i));
+
+				m = p.matcher(manejador.getEnlace().get(i));
+				if (m.find()) {
+					System.out.println(m.group(1));
+				}
+
+				System.out.println();
 			}
 
 		} catch (ParserConfigurationException | SAXException | IOException e) {

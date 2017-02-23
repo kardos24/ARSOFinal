@@ -12,13 +12,21 @@ public class ManejadorValidacion extends DefaultHandler {
 
 	private List<SAXParseException> errores;
 
+	private List<String> titulo, url, enlace;
+
 	public ManejadorValidacion() {
 		errores = new LinkedList<SAXParseException>();
+		titulo = new LinkedList<String>();
+		url = new LinkedList<String>();
+		enlace = new LinkedList<String>();
 	}
 
 	@Override
 	public void startDocument() throws SAXException {
 		errores.clear();
+		titulo.clear();
+		url.clear();
+		enlace.clear();
 	}
 
 	@Override
@@ -30,10 +38,10 @@ public class ManejadorValidacion extends DefaultHandler {
 		 */
 
 		if (qName.equals("img")) {
-			System.out.println("Titulo: " + attributes.getValue("alt"));
-			System.out.println("URL imagen: " + attributes.getValue("src"));
+			titulo.add(attributes.getValue("alt"));
+			url.add(attributes.getValue("src"));
 		} else if (qName.equals("a")) {
-			System.out.println("Enlace: " + attributes.getValue("href"));
+			enlace.add(attributes.getValue("href"));
 		}
 	}
 
@@ -59,5 +67,17 @@ public class ManejadorValidacion extends DefaultHandler {
 
 	public List<SAXParseException> getErrores() {
 		return errores;
+	}
+
+	public List<String> getTitulo() {
+		return titulo;
+	}
+
+	public List<String> getUrl() {
+		return url;
+	}
+
+	public List<String> getEnlace() {
+		return enlace;
 	}
 }
