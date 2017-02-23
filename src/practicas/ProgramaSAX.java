@@ -15,23 +15,20 @@ public class ProgramaSAX {
 		try {
 			SAXParserFactory factoria = SAXParserFactory.newInstance();
 
-			factoria.setNamespaceAware(true);
-			factoria.setValidating(true);
-
 			SAXParser analizador = factoria.newSAXParser();
 			analizador.setProperty("http://java.sun.com/xml/jaxp/properties/schemaLanguage",
 					"http://www.w3.org/2001/XMLSchema");
 
 			ManejadorValidacion manejador = new ManejadorValidacion();
 
-			analizador.parse("xml/ejercicio1-3.xml", manejador);
-
-			System.out.println(manejador.getDiligencias());
+			analizador.parse(
+					"http://www.rtve.es/m/alacarta/programsbychannel/?media=tve&channel=la1&modl=canales&filterFindPrograms=todas",
+					manejador);
 
 			for (SAXParseException error : manejador.getErrores()) {
 				System.out.println("Error validación: " + error.getMessage());
 			}
-			System.out.println("Nota media: "+ manejador.getNotaMedia());
+			System.out.println("Nota media: " + manejador.getNotaMedia());
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 			System.out.println("Error sintactico: " + e.getMessage());
 		}
