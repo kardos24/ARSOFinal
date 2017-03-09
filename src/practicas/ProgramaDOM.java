@@ -3,8 +3,10 @@ package practicas;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -44,6 +46,11 @@ public class ProgramaDOM {
 			for (int i = 0; i < elementos.getLength(); i++) {
 
 				NodeList nl = elementos.item(i).getChildNodes();
+				List<Emision> channels;			//done
+				String identificador;			//done
+				String nombre;
+				String urlPrograma;
+				String urlImagen;
 
 				// System.out.println(nl.getLength());
 				for (int j = 0; j < nl.getLength(); j++) {
@@ -61,9 +68,9 @@ public class ProgramaDOM {
 						matcher = pattern.matcher(e.getAttribute("href"));
 						if (matcher.find()) {
 							System.out.println(matcher.group(1));
-
-							// Funcion que recoja todas las emisiones del
-							List<Emision> channels = getBroadcastFromChannel(matcher.group(1), 1);
+							
+							identificador = matcher.group(1);
+							channels = getBroadcastFromChannel(identificador, 1);
 						}
 					} else if (n.getNodeName().equals("p") && n.getFirstChild().getNodeName().equals("img")) {
 						e = (Element) n.getFirstChild();
@@ -77,7 +84,19 @@ public class ProgramaDOM {
 		}
 
 	}
-
+	
+	private static List<Emision> getBroadcastFromChannel(String idChannel){
+		List<Emision> channelListResult = new LinkedList<>();
+		AtomicInteger i = new AtomicInteger(1);
+		List<Emision> channelListPage = new LinkedList<>();
+		do{
+			channelListPage.clear();
+			channelListPage.addAll(getBroadcastFromChannel(idChannel, i.getAndIncrement()));
+			
+		}while(!channelListPage.isEmpty());
+		
+		return channelListResult;
+	}
 	private static List<Emision> getBroadcastFromChannel(String idChannel, Integer numPage) {
 
 		List<Emision> emisionList = new LinkedList<>();
