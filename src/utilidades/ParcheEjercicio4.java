@@ -7,9 +7,11 @@ import java.io.StringWriter;
 import java.net.URL;
 import java.util.Scanner;
 
+import org.xml.sax.InputSource;
+
 public class ParcheEjercicio4 {
 
-	public static String retornarXML(String urlEmisiones) throws Exception {
+	public static  InputSource retornarXML(String urlEmisiones) throws Exception {
 
 		// Abrimos la conexión con la URL indicando que la codificación de
 		// caracteres es UTF-8
@@ -35,11 +37,9 @@ public class ParcheEjercicio4 {
 		// Abrimos un flujo de lectura al documento en memoria
 		StringReader reader = new StringReader(stringWriter.toString());
 
-		return reader.toString();
+		InputSource source = new InputSource(reader);
 
-		// El objeto reader puede ser el parámetro del método build del
-		// analizador DOM
-
+		return source;
 	}
 
 }

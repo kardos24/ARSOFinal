@@ -72,6 +72,7 @@ public class ProgramaDOM {
 						urlPrograma = e.getAttribute("href");
 
 						identificador = urlPrograma.split("/")[4];
+						System.out.println("Entro a " + identificador);
 						emisiones = getBroadcastFromChannel(identificador, 1);
 
 						System.out.println(identificador);
@@ -104,6 +105,7 @@ public class ProgramaDOM {
 				writer.writeCharacters(urlImagen);
 				writer.writeEndElement();
 
+				System.out.println("Emisiones = " + emisiones.size());
 				// FIXME foreach emisiones...
 				for (Emision e : emisiones) {
 					writer.writeStartElement("emision");
@@ -123,8 +125,6 @@ public class ProgramaDOM {
 
 					writer.writeEndElement();
 				}
-				writer.writeStartElement("nombre");
-				writer.writeEndElement();
 
 				writer.writeEndElement();
 			}
@@ -163,15 +163,19 @@ public class ProgramaDOM {
 
 			DocumentBuilder analizador;
 			analizador = factoria.newDocumentBuilder();
+
 			Document document = analizador.parse(ParcheEjercicio4.retornarXML("http://www.rtve.es/m/alacarta/videos/"
 					+ idChannel + "/multimedialist_pag.shtml/?media=tve&contentKey=&programName=" + idChannel
 					+ "&media=tve&paginaBusqueda=" + numPage));
 
 			NodeList elementos = document.getElementsByTagName("li");
 
+			System.out.println("HOLA!");
+
 			String titulo = null, duracion = null, url = null;
 			Date fecha = null;
 
+			System.out.println(elementos.getLength());
 			for (int i = 0; i < elementos.getLength(); i++) {
 				Emision emision;
 
@@ -190,7 +194,9 @@ public class ProgramaDOM {
 
 						duracion = text[1];
 
-						if (text[0].startsWith("ayer")) {
+						if (text[0].startsWith("hoy")) {
+							fecha = new Date();
+						} else if (text[0].startsWith("ayer")) {
 							fecha = Utils.ayer();
 						} else if (text[0].startsWith("pasado")) {
 							int referencia;
@@ -233,6 +239,7 @@ public class ProgramaDOM {
 				emisionList.add(new Emision(titulo, fecha, duracion, url));
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			return new LinkedList<>();
 		}
 
