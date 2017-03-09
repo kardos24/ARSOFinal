@@ -1,16 +1,19 @@
 package practicas;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.IntStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -20,6 +23,7 @@ import org.xml.sax.SAXException;
 
 import modelo.Emision;
 import utilidades.ParcheEjercicio4;
+import utilidades.Utils;
 
 public class ProgramaDOM {
 	public static void main(String[] args) throws Exception {
@@ -28,7 +32,6 @@ public class ProgramaDOM {
 
 	public static void getListProgramDOM() {
 		try {
-
 			DocumentBuilderFactory factoria = DocumentBuilderFactory.newInstance();
 
 			DocumentBuilder analizador;
@@ -37,20 +40,23 @@ public class ProgramaDOM {
 			Document document = analizador.parse(
 					"http://www.rtve.es/m/alacarta/programsbychannel/?media=tve&channel=la1&modl=canales&filterFindPrograms=todas");
 
-			Pattern pattern = Pattern.compile("/m/alacarta/videos/(.+)/\\?media=tve");
-			Matcher matcher;
+			// Pattern pattern =
+			// Pattern.compile("/m/alacarta/videos/(.+)/\\?media=tve");
+			// Matcher matcher;
+
+			XMLOutputFactory xof = XMLOutputFactory.newInstance();
+			XMLStreamWriter writer = xof.createXMLStreamWriter(new FileOutputStream("xml/listado-programas.xml"));
 
 			NodeList elementos = document.getElementsByTagName("li");
 
+			writer.writeStartDocument();
+			writer.writeStartElement("programas");
 			// System.out.println(elementos.getLength());
 			for (int i = 0; i < elementos.getLength(); i++) {
-
 				NodeList nl = elementos.item(i).getChildNodes();
-				List<Emision> channels;			//done
-				String identificador;			//done
-				String nombre;
-				String urlPrograma;
-				String urlImagen;
+
+				List<Emision> emisiones = null;
+				String identificador = null, nombre = null, urlPrograma = null, urlImagen = null;
 
 				// System.out.println(nl.getLength());
 				for (int j = 0; j < nl.getLength(); j++) {
@@ -60,45 +66,94 @@ public class ProgramaDOM {
 					// System.out.println(n.getNodeName());
 
 					if (n.getNodeName().equals("h3")) {
-						System.out.println(n.getTextContent());	
+						nombre = n.getTextContent();
 					} else if (n.getNodeName().equals("a")) {
 						e = (Element) n;
-						System.out.println(e.getAttribute("href"));
+						urlPrograma = e.getAttribute("href");
 
-						matcher = pattern.matcher(e.getAttribute("href"));
-						if (matcher.find()) {
-							System.out.println(matcher.group(1));
-							
-							identificador = matcher.group(1);
-							channels = getBroadcastFromChannel(identificador, 1);
-						}
+						identificador = urlPrograma.split("/")[4];
+						emisiones = getBroadcastFromChannel(identificador, 1);
+
+						System.out.println(identificador);
+						// matcher = pattern.matcher(e.getAttribute("href"));
+
+						/*
+						 * if (matcher.find()) {
+						 * System.out.println(matcher.group(1));
+						 * 
+						 * identificador = matcher.group(1); emisiones =
+						 * getBroadcastFromChannel(identificador, 1); }
+						 */
 					} else if (n.getNodeName().equals("p") && n.getFirstChild().getNodeName().equals("img")) {
 						e = (Element) n.getFirstChild();
-						System.out.println(e.getAttribute("src"));
+						urlImagen = e.getAttribute("src");
 					}
 				}
-				System.out.println();
+
+				writer.writeStartElement("programa");
+
+				writer.writeAttribute("identificador", identificador);
+
+				writer.writeStartElement("nombre");
+				writer.writeCharacters(nombre);
+				writer.writeEndElement();
+				writer.writeStartElement("url-programa");
+				writer.writeCharacters(urlPrograma);
+				writer.writeEndElement();
+				writer.writeStartElement("url-portada");
+				writer.writeCharacters(urlImagen);
+				writer.writeEndElement();
+
+				// FIXME foreach emisiones...
+				for (Emision e : emisiones) {
+					writer.writeStartElement("emision");
+
+					writer.writeStartElement("titulo");
+					writer.writeCharacters(e.getTitulo());
+					writer.writeEndElement();
+					writer.writeStartElement("fecha");
+					writer.writeCharacters(Utils.convertirFechaTexto(e.getFecha()));
+					writer.writeEndElement();
+					writer.writeStartElement("tiempo-emision");
+					writer.writeCharacters(e.getDuracion());
+					writer.writeEndElement();
+					writer.writeStartElement("url-emision");
+					writer.writeCharacters(e.getUrl());
+					writer.writeEndElement();
+
+					writer.writeEndElement();
+				}
+				writer.writeStartElement("nombre");
+				writer.writeEndElement();
+
+				writer.writeEndElement();
 			}
+
+			writer.writeEndElement();
+			writer.writeEndDocument();
 		} catch (ParserConfigurationException | SAXException | IOException e1) {
+			e1.printStackTrace();
+		} catch (XMLStreamException e1) {
+			// TODO Bloque catch generado automáticamente
 			e1.printStackTrace();
 		}
 
 	}
-	
-	private static List<Emision> getBroadcastFromChannel(String idChannel){
+
+	private static List<Emision> getBroadcastFromChannel(String idChannel) {
 		List<Emision> channelListResult = new LinkedList<>();
 		AtomicInteger i = new AtomicInteger(1);
 		List<Emision> channelListPage = new LinkedList<>();
-		do{
+		do {
 			channelListPage.clear();
 			channelListPage.addAll(getBroadcastFromChannel(idChannel, i.getAndIncrement()));
-			
-		}while(!channelListPage.isEmpty());
-		
+
+		} while (!channelListPage.isEmpty());
+
 		return channelListResult;
 	}
-	private static List<Emision> getBroadcastFromChannel(String idChannel, Integer numPage) {
 
+	private static List<Emision> getBroadcastFromChannel(String idChannel, Integer numPage) {
 		List<Emision> emisionList = new LinkedList<>();
 		try {
 			if (numPage == null)
@@ -113,26 +168,69 @@ public class ProgramaDOM {
 					+ "&media=tve&paginaBusqueda=" + numPage));
 
 			NodeList elementos = document.getElementsByTagName("li");
+
+			String titulo = null, duracion = null, url = null;
+			Date fecha = null;
+
 			for (int i = 0; i < elementos.getLength(); i++) {
-				Emision emision = new Emision();
+				Emision emision;
 
 				NodeList nl = elementos.item(i).getChildNodes();
 
 				for (int j = 0; j < nl.getLength(); j++) {
 					Node n = nl.item(j);
 					Element e;
-					if (n.getNodeName().equals("h3")) {
-						// NO es necesario ya lo tenemos
-					} else if (n.getNodeName().equals("h4")) {
-						// Capitulo
+					if (n.getNodeName().equals("h4")) {
+						titulo = n.getTextContent();
 					} else if (n.getNodeName().equals("p")) {
-						// fecha
+						String[] text = n.getTextContent().split("-");
+						for (String s : text) {
+							s.trim();
+						}
+
+						duracion = text[1];
+
+						if (text[0].startsWith("ayer")) {
+							fecha = Utils.ayer();
+						} else if (text[0].startsWith("pasado")) {
+							int referencia;
+							switch (text[0].split(" ")[1]) {
+							case "lunes":
+								referencia = Calendar.MONDAY;
+								break;
+							case "martes":
+								referencia = Calendar.TUESDAY;
+								break;
+							case "miercoles":
+								referencia = Calendar.WEDNESDAY;
+								break;
+							case "jueves":
+								referencia = Calendar.THURSDAY;
+								break;
+							case "viernes":
+								referencia = Calendar.FRIDAY;
+								break;
+							case "sabado":
+								referencia = Calendar.SATURDAY;
+								break;
+							case "domingo":
+								referencia = Calendar.SUNDAY;
+								break;
+							default:
+								referencia = 0;
+							}
+
+							fecha = Utils.calcularFecha(referencia);
+						} else {
+							fecha = Utils.convertirTextoFecha(text[0]);
+						}
 					} else if (n.getNodeName().equals("a")) {
-						// url con el capitulo
+						e = (Element) n;
+						url = e.getAttribute("href");
 					}
 				}
-				
-				emisionList.add(emision);
+
+				emisionList.add(new Emision(titulo, fecha, duracion, url));
 			}
 		} catch (Exception e) {
 			return new LinkedList<>();
