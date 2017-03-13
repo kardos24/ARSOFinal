@@ -21,7 +21,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import modelo.Emision;
+import modelo.EmisionDOM;
 import utilidades.ParcheEjercicio4;
 import utilidades.Utils;
 
@@ -49,13 +49,15 @@ public class ProgramaDOM {
 
 			NodeList elementos = document.getElementsByTagName("li");
 
+			System.out.println("Inicio");
+
 			writer.writeStartDocument();
 			writer.writeStartElement("programas");
 			// System.out.println(elementos.getLength());
 			for (int i = 0; i < elementos.getLength(); i++) {
 				NodeList nl = elementos.item(i).getChildNodes();
 
-				List<Emision> emisiones = null;
+				List<EmisionDOM> emisiones = null;
 				String identificador = null, nombre = null, urlPrograma = null, urlImagen = null;
 
 				// System.out.println(nl.getLength());
@@ -72,7 +74,6 @@ public class ProgramaDOM {
 						urlPrograma = e.getAttribute("href");
 
 						identificador = urlPrograma.split("/")[4];
-						System.out.println("Entro a " + identificador);
 						emisiones = getBroadcastFromChannel(identificador, 1);
 
 						System.out.println(identificador);
@@ -107,7 +108,7 @@ public class ProgramaDOM {
 
 				System.out.println("Emisiones = " + emisiones.size());
 				// FIXME foreach emisiones...
-				for (Emision e : emisiones) {
+				for (EmisionDOM e : emisiones) {
 					writer.writeStartElement("emision");
 
 					writer.writeStartElement("titulo");
@@ -131,6 +132,8 @@ public class ProgramaDOM {
 
 			writer.writeEndElement();
 			writer.writeEndDocument();
+
+			System.out.println("Fin");
 		} catch (ParserConfigurationException | SAXException | IOException e1) {
 			e1.printStackTrace();
 		} catch (XMLStreamException e1) {
@@ -140,10 +143,10 @@ public class ProgramaDOM {
 
 	}
 
-	private static List<Emision> getBroadcastFromChannel(String idChannel) {
-		List<Emision> channelListResult = new LinkedList<>();
+	private static List<EmisionDOM> getBroadcastFromChannel(String idChannel) {
+		List<EmisionDOM> channelListResult = new LinkedList<>();
 		AtomicInteger i = new AtomicInteger(1);
-		List<Emision> channelListPage = new LinkedList<>();
+		List<EmisionDOM> channelListPage = new LinkedList<>();
 		do {
 			channelListPage.clear();
 			channelListPage.addAll(getBroadcastFromChannel(idChannel, i.getAndIncrement()));
@@ -153,8 +156,8 @@ public class ProgramaDOM {
 		return channelListResult;
 	}
 
-	private static List<Emision> getBroadcastFromChannel(String idChannel, Integer numPage) {
-		List<Emision> emisionList = new LinkedList<>();
+	private static List<EmisionDOM> getBroadcastFromChannel(String idChannel, Integer numPage) {
+		List<EmisionDOM> emisionList = new LinkedList<>();
 		try {
 			if (numPage == null)
 				numPage = 1;
@@ -170,14 +173,10 @@ public class ProgramaDOM {
 
 			NodeList elementos = document.getElementsByTagName("li");
 
-			System.out.println("HOLA!");
-
 			String titulo = null, duracion = null, url = null;
 			Date fecha = null;
-
-			System.out.println(elementos.getLength());
+			
 			for (int i = 0; i < elementos.getLength(); i++) {
-				Emision emision;
 
 				NodeList nl = elementos.item(i).getChildNodes();
 
@@ -236,7 +235,7 @@ public class ProgramaDOM {
 					}
 				}
 
-				emisionList.add(new Emision(titulo, fecha, duracion, url));
+				emisionList.add(new EmisionDOM(titulo, fecha, duracion, url));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

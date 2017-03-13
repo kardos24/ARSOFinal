@@ -2,13 +2,13 @@ package modelo;
 
 import java.util.Date;
 
-public class Emision {
+public class EmisionDOM {
 	private String titulo;
 	private Date fecha;
 	private String duracion;
 	private String url;
 
-	public Emision(String titulo, Date fecha, String duracion, String url) {
+	public EmisionDOM(String titulo, Date fecha, String duracion, String url) {
 		this.titulo = titulo;
 		this.fecha = fecha;
 		this.duracion = duracion;
