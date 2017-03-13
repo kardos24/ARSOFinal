@@ -21,8 +21,8 @@
 					<complexType>
 						<sequence>
 							<element name="nombre" type="string" />
-							<element name="url-programa" type="tns:tipo_url" />
-							<element name="url-portada" type="tns:tipo_url" />
+							<element name="url-programa" type="anyURI" />
+							<element name="url-portada" type="anyURI" />
 							<element name="emision" minOccurs="1" maxOccurs="unbounded">
 								<complexType>
 									<sequence>
