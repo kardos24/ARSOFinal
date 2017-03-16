@@ -6,34 +6,26 @@
 	<xsl:template match="/">
 		<?xml version="1.0" encoding="utf-8"?>
 		<feed xmlns="http://www.w3.org/2005/Atom">
-			<title>TVE a la carta</title>
-			<subtitle>Programacion disponible de la web de Televisión Española
-			</subtitle>
-			<link href="" rel="self" />
-			<link href="" />
-			<updated></updated>
-			<author>
-				<name>Daniel y Luis</name>
-			</author>
-			<id>Unique Id</id>
-
 			<xsl:apply-templates />
 		</feed>
 	</xsl:template>
 
 	<xsl:template match="programa">
-		<entry>
-			<xsl:apply-templates select="nombre" />
-			<xsl:apply-templates select="url-programa" />
-			<id>
-				<xsl:value-of select="@identificador" />
-			</id>
-			<updated></updated>
-			<summary>Job description</summary>
-			<author>
-				<name>TVE</name>
-			</author>
-		</entry>
+		<xsl:apply-templates select="nombre" />
+		<subtitle>
+			<xsl:apply-templates select="url-portada" />
+		</subtitle>
+		<link href="" rel="self" />
+		<xsl:apply-templates select="url-programa" />
+		<updated></updated>
+		<author>
+			<name>TVE</name>
+		</author>
+		<id>
+			<xsl:value-of select="@identificador" />
+		</id>
+
+		<xsl:apply-templates select="emision" />
 	</xsl:template>
 
 	<xsl:template match="nombre">
@@ -44,5 +36,46 @@
 
 	<xsl:template match="url-programa">
 		<link href="{.}" />
+	</xsl:template>
+
+	<xsl:template match="url-portada">
+		<xsl:value-of select="." />
+	</xsl:template>
+
+	<xsl:template match="emision">
+		<entry>
+			<title>
+				<xsl:apply-templates select="titulo" />
+			</title>
+			<xsl:apply-templates select="url-emision" />
+			<id>Unique id</id>
+			<updated></updated>
+			<summary>
+				Emitido el dia
+				<xsl:apply-templates select="fecha" />
+				-
+				Tiempo de emision:
+				<xsl:apply-templates select="tiempo-emision" />
+			</summary>
+			<author>
+				<name>TVE</name>
+			</author>
+		</entry>
+	</xsl:template>
+
+	<xsl:template match="titulo">
+		<xsl:value-of select="." />
+	</xsl:template>
+
+	<xsl:template match="url-emision">
+		<link href="{.}" />
+	</xsl:template>
+
+	<xsl:template match="fecha">
+		<xsl:value-of select="." />
+	</xsl:template>
+
+	<xsl:template match="tiempo-emision">
+		<xsl:value-of select="." />
 	</xsl:template>
 </xsl:stylesheet>
