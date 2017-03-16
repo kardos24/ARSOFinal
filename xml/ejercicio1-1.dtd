@@ -1,4 +1,3 @@
-<!ELEMENT programas (programa+)>
 <!ELEMENT programa (nombre, url, url-portada<xs:element name="asignatura"><xs:element name="asignatura">, emision+)>
 <!ELEMENT nombre (#PCDATA)>
 <!ELEMENT url (#PCDATA)>
