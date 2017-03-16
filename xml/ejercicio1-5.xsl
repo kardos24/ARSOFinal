@@ -5,26 +5,24 @@
 
 	<xsl:template match="/">
 		<feed xmlns="http://www.w3.org/2005/Atom">
-			<xsl:apply-templates />
+			<xsl:apply-templates select="nombre" />
+			<subtitle>
+				<xsl:apply-templates select="url-portada" />
+			</subtitle>
+			<link href="" rel="self" />
+			<xsl:apply-templates select="url-programa" />
+			<updated>
+				<xsl:value-of select="emision[1]/fecha" />
+			</updated>
+			<author>
+				<name>Televisión Española</name>
+			</author>
+			<id>
+				<xsl:value-of select="@identificador" />
+			</id>
+
+			<xsl:apply-templates select="emision" />
 		</feed>
-	</xsl:template>
-
-	<xsl:template match="programa">
-		<xsl:apply-templates select="nombre" />
-		<subtitle>
-			<xsl:apply-templates select="url-portada" />
-		</subtitle>
-		<link href="" rel="self" />
-		<xsl:apply-templates select="url-programa" />
-		<updated></updated>
-		<author>
-			<name>TVE</name>
-		</author>
-		<id>
-			<xsl:value-of select="@identificador" />
-		</id>
-
-		<xsl:apply-templates select="emision" />
 	</xsl:template>
 
 	<xsl:template match="nombre">
@@ -47,17 +45,18 @@
 				<xsl:apply-templates select="titulo" />
 			</title>
 			<xsl:apply-templates select="url-emision" />
-			<id>Unique id</id>
-			<updated></updated>
-			<summary>
-				Emitido el dia
+			<id>
+				<xsl:value-of select="../@identificador" />
+			</id>
+			<updated>
 				<xsl:apply-templates select="fecha" />
-				-
-				Tiempo de emision:
+			</updated>
+			<summary>
+				Tiempo de emisión:
 				<xsl:apply-templates select="tiempo-emision" />
 			</summary>
 			<author>
-				<name>TVE</name>
+				<name>Televisión Española</name>
 			</author>
 		</entry>
 	</xsl:template>
