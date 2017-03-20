@@ -32,40 +32,37 @@ public class ProgramaDOM {
 
 	public static void getListProgramDOM() {
 		try {
-			DocumentBuilderFactory factoria = DocumentBuilderFactory.newInstance();
+			DocumentBuilderFactory factoria = DocumentBuilderFactory
+					.newInstance();
 
 			DocumentBuilder analizador;
 			analizador = factoria.newDocumentBuilder();
 
-			Document document = analizador.parse(
-					"http://www.rtve.es/m/alacarta/programsbychannel/?media=tve&channel=la1&modl=canales&filterFindPrograms=todas");
+			Document document = analizador
+					.parse("http://www.rtve.es/m/alacarta/programsbychannel/?media=tve&channel=la1&modl=canales&filterFindPrograms=todas");
 
 			// Pattern pattern =
 			// Pattern.compile("/m/alacarta/videos/(.+)/\\?media=tve");
 			// Matcher matcher;
 
 			XMLOutputFactory xof = XMLOutputFactory.newInstance();
-			XMLStreamWriter writer = xof.createXMLStreamWriter(new FileOutputStream("xml/listado-programas.xml"));
+			XMLStreamWriter writer;
 
 			NodeList elementos = document.getElementsByTagName("li");
 
-			System.out.println("Inicio");
+			// XXX He puesto que el for solo recorra los primeros 5 elementos
+			// del documento
 
-			writer.writeStartDocument();
-			writer.writeStartElement("programas");
-			// System.out.println(elementos.getLength());
-			for (int i = 0; i < elementos.getLength(); i++) {
+			// for (int i = 0; i < elementos.getLength(); i++) {
+			for (int i = 0; i < 5; i++) {
 				NodeList nl = elementos.item(i).getChildNodes();
 
 				List<EmisionDOM> emisiones = null;
 				String identificador = null, nombre = null, urlPrograma = null, urlImagen = null;
 
-				// System.out.println(nl.getLength());
 				for (int j = 0; j < nl.getLength(); j++) {
 					Node n = nl.item(j);
 					Element e;
-
-					// System.out.println(n.getNodeName());
 
 					if (n.getNodeName().equals("h3")) {
 						nombre = n.getTextContent();
@@ -76,7 +73,6 @@ public class ProgramaDOM {
 						identificador = urlPrograma.split("/")[4];
 						emisiones = getBroadcastFromChannel(identificador, 1);
 
-						System.out.println(identificador);
 						// matcher = pattern.matcher(e.getAttribute("href"));
 
 						/*
@@ -86,58 +82,65 @@ public class ProgramaDOM {
 						 * identificador = matcher.group(1); emisiones =
 						 * getBroadcastFromChannel(identificador, 1); }
 						 */
-					} else if (n.getNodeName().equals("p") && n.getFirstChild().getNodeName().equals("img")) {
+					} else if (n.getNodeName().equals("p")
+							&& n.getFirstChild().getNodeName().equals("img")) {
 						e = (Element) n.getFirstChild();
 						urlImagen = e.getAttribute("src");
 					}
 				}
 
+				writer = xof.createXMLStreamWriter(new FileOutputStream(
+						"xml-bd/" + identificador + ".xml"));
+
+				writer.writeStartDocument();
 				writer.writeStartElement("programa");
 
 				writer.writeAttribute("identificador", identificador);
 
 				writer.writeStartElement("nombre");
 				writer.writeCharacters(nombre);
-				writer.writeEndElement();
+				writer.writeEndElement(); // nombre
+
 				writer.writeStartElement("url-programa");
 				writer.writeCharacters(urlPrograma);
-				writer.writeEndElement();
+				writer.writeEndElement(); // url-programa
+
 				writer.writeStartElement("url-portada");
 				writer.writeCharacters(urlImagen);
-				writer.writeEndElement();
+				writer.writeEndElement(); // url-portada
 
-				System.out.println("Emisiones = " + emisiones.size());
-				// FIXME foreach emisiones...
 				for (EmisionDOM e : emisiones) {
 					writer.writeStartElement("emision");
 
 					writer.writeStartElement("titulo");
 					writer.writeCharacters(e.getTitulo());
-					writer.writeEndElement();
+					writer.writeEndElement(); // titulo
+
 					writer.writeStartElement("fecha");
-					writer.writeCharacters(Utils.convertirFechaTexto(e.getFecha()));
-					writer.writeEndElement();
+					writer.writeCharacters(Utils.convertirFechaTexto(e
+							.getFecha()));
+					writer.writeEndElement(); // fecha
+
 					writer.writeStartElement("tiempo-emision");
-					writer.writeCharacters(e.getDuracion());
-					writer.writeEndElement();
+					writer.writeCharacters(e.getDuracion().trim());
+					writer.writeEndElement(); // tiempo-emision
+
 					writer.writeStartElement("url-emision");
 					writer.writeCharacters(e.getUrl());
-					writer.writeEndElement();
+					writer.writeEndElement(); // url-emision
 
-					writer.writeEndElement();
+					writer.writeEndElement(); // emision
 				}
 
-				writer.writeEndElement();
+				writer.writeEndElement(); // programa
+				writer.writeEndDocument();
+
+				writer.close();
 			}
 
-			writer.writeEndElement();
-			writer.writeEndDocument();
-
-			System.out.println("Fin");
 		} catch (ParserConfigurationException | SAXException | IOException e1) {
 			e1.printStackTrace();
 		} catch (XMLStreamException e1) {
-			// TODO Bloque catch generado automáticamente
 			e1.printStackTrace();
 		}
 
@@ -149,33 +152,41 @@ public class ProgramaDOM {
 		List<EmisionDOM> channelListPage = new LinkedList<>();
 		do {
 			channelListPage.clear();
-			channelListPage.addAll(getBroadcastFromChannel(idChannel, i.getAndIncrement()));
+			channelListPage.addAll(getBroadcastFromChannel(idChannel,
+					i.getAndIncrement()));
 
 		} while (!channelListPage.isEmpty());
 
 		return channelListResult;
 	}
 
-	private static List<EmisionDOM> getBroadcastFromChannel(String idChannel, Integer numPage) {
+	private static List<EmisionDOM> getBroadcastFromChannel(String idChannel,
+			Integer numPage) {
 		List<EmisionDOM> emisionList = new LinkedList<>();
 		try {
 			if (numPage == null)
 				numPage = 1;
 
-			DocumentBuilderFactory factoria = DocumentBuilderFactory.newInstance();
+			DocumentBuilderFactory factoria = DocumentBuilderFactory
+					.newInstance();
 
 			DocumentBuilder analizador;
 			analizador = factoria.newDocumentBuilder();
 
-			Document document = analizador.parse(ParcheEjercicio4.retornarXML("http://www.rtve.es/m/alacarta/videos/"
-					+ idChannel + "/multimedialist_pag.shtml/?media=tve&contentKey=&programName=" + idChannel
-					+ "&media=tve&paginaBusqueda=" + numPage));
+			Document document = analizador
+					.parse(ParcheEjercicio4
+							.retornarXML("http://www.rtve.es/m/alacarta/videos/"
+									+ idChannel
+									+ "/multimedialist_pag.shtml/?media=tve&contentKey=&programName="
+									+ idChannel
+									+ "&media=tve&paginaBusqueda="
+									+ numPage));
 
 			NodeList elementos = document.getElementsByTagName("li");
 
 			String titulo = null, duracion = null, url = null;
 			Date fecha = null;
-			
+
 			for (int i = 0; i < elementos.getLength(); i++) {
 
 				NodeList nl = elementos.item(i).getChildNodes();
@@ -224,7 +235,6 @@ public class ProgramaDOM {
 							default:
 								referencia = 0;
 							}
-
 							fecha = Utils.calcularFecha(referencia);
 						} else {
 							fecha = Utils.convertirTextoFecha(text[0]);
