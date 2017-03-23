@@ -12,13 +12,14 @@ public class ManejadorValidacion extends DefaultHandler {
 
 	private List<SAXParseException> errores;
 
-	private List<String> titulo, url, enlace;
+	private List<String> titulo, url, enlace, idProgram;
 
 	public ManejadorValidacion() {
-		errores = new LinkedList<SAXParseException>();
-		titulo = new LinkedList<String>();
-		url = new LinkedList<String>();
-		enlace = new LinkedList<String>();
+		errores = new LinkedList<>();
+		titulo = new LinkedList<>();
+		url = new LinkedList<>();
+		enlace = new LinkedList<>();
+		idProgram = new LinkedList<>();
 	}
 
 	@Override
@@ -42,6 +43,7 @@ public class ManejadorValidacion extends DefaultHandler {
 			url.add(attributes.getValue("src"));
 		} else if (qName.equals("a")) {
 			enlace.add(attributes.getValue("href"));
+			idProgram.add(attributes.getValue("href").split("/")[4]);
 		}
 	}
 
@@ -79,5 +81,9 @@ public class ManejadorValidacion extends DefaultHandler {
 
 	public List<String> getEnlace() {
 		return enlace;
+	}
+
+	public List<String> getIdPrograma() {
+		return idProgram;
 	}
 }

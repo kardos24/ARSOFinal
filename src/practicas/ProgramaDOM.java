@@ -83,16 +83,6 @@ public class ProgramaDOM {
 						urlPrograma = e.getAttribute("href");
 
 						identificador = urlPrograma.split("/")[4];
-
-						// matcher = pattern.matcher(e.getAttribute("href"));
-
-						/*
-						 * if (matcher.find()) {
-						 * System.out.println(matcher.group(1));
-						 * 
-						 * identificador = matcher.group(1); emisiones =
-						 * getBroadcastFromChannel(identificador, 1); }
-						 */
 					} else if (n.getNodeName().equals("p") && n.getFirstChild().getNodeName().equals("img")) {
 						e = (Element) n.getFirstChild();
 						urlImagen = e.getAttribute("src");

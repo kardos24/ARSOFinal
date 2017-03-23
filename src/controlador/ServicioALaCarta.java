@@ -62,6 +62,13 @@ public class ServicioALaCarta {
 		File program = recuperarPrograma(id);
 		return (TipoPrograma) unmarshaller.unmarshal(program);
 	}
+
+	public String getProgramaAtom(String id) throws JAXBException {
+		TipoPrograma program = getPrograma(id); // FIXME Realizar transformación
+												// Atom
+
+		return null;
+	}
 	
 	private File recuperarPrograma(String id){
 		File file = new File("xml-bd/" + id + ".xml");
@@ -84,13 +91,6 @@ public class ServicioALaCarta {
 		if (!folder.exists())
 			folder.mkdir();
 
-	}
-
-	public String getProgramaAtom(String id) throws JAXBException {
-		TipoPrograma program = getPrograma(id); // FIXME Realizar transformación
-												// Atom
-
-		return null;
 	}
 
 }
