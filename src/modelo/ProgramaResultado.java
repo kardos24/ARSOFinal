@@ -1,7 +1,14 @@
 package modelo;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlType;
+
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "programResultado", propOrder = {"id","titulo"})
 public class ProgramaResultado {
-	
+	@XmlAttribute(required = true)
 	private String id;
 	private String titulo;
 	
