@@ -1,4 +1,4 @@
-package practicas;
+package procesadoresXML;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -33,18 +33,18 @@ public class ProgramaDOM {
 	}
 
 	public static void getListProgramDOM() {
-		getListProgramDOM(null);
+		getListProgramDOM(null, null);
 	}
 
 	public static void getListProgramDOM(Integer max) {
-		getListProgramDOM(max, null, null);
+		getListProgramDOM(max, null);
 	}
 
-	public static void getListProgramDOM(String id, String titulo) {
-		getListProgramDOM(null, id, titulo);
+	public static void getListProgramDOM(String id) {
+		getListProgramDOM(null, id);
 	}
 
-	private static void getListProgramDOM(Integer max, String id, String titulo) {
+	private static void getListProgramDOM(Integer max, String id) {
 		try {
 			DocumentBuilderFactory factoria = DocumentBuilderFactory.newInstance();
 

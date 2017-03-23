@@ -1,4 +1,4 @@
-package practicas;
+package procesadoresXML;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -41,18 +41,9 @@ public class ProgramaSAX {
 
 			if (verbose) {
 				System.out.println("Inicio analisis con SAX");
-				for (int i = 0; i < manejador.getTitulo().size(); i++) {
-					// m = p.matcher(manejador.getEnlace().get(i));
-					// if (m.find()) {
-					// System.out.println(m.group(1));
-					// }
-					System.out.println(manejador.getTitulo().get(i));
-					System.out.println(manejador.getEnlace().get(i).split("/")[4]);
-					System.out.println(manejador.getEnlace().get(i));
-					System.out.println(manejador.getUrl().get(i));
-
-					System.out.println();
-				}
+				manejador.getPrograma().forEach((ps) -> {
+					System.out.println("Titulo: " + ps.getTitulo() + " - id: " + ps.getId());
+				});
 				System.out.println("Fin analisis con SAX");
 			}
 

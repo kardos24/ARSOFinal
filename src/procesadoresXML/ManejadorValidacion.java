@@ -1,4 +1,4 @@
-package practicas;
+package procesadoresXML;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -8,42 +8,43 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import modelo.ProgramaResultado;
+
 public class ManejadorValidacion extends DefaultHandler {
 
 	private List<SAXParseException> errores;
 
-	private List<String> titulo, url, enlace, idProgram;
+	private List<ProgramaResultado> programaList;
+
+	private ProgramaResultado programaTemp;
 
 	public ManejadorValidacion() {
 		errores = new LinkedList<>();
-		titulo = new LinkedList<>();
-		url = new LinkedList<>();
-		enlace = new LinkedList<>();
-		idProgram = new LinkedList<>();
+		programaList = new LinkedList<>();
 	}
 
 	@Override
 	public void startDocument() throws SAXException {
 		errores.clear();
-		titulo.clear();
-		url.clear();
-		enlace.clear();
+		programaList.clear();
+		programaTemp = null;
 	}
 
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-		/*
-		 * System.out.println(qName); for (int i = 0; i <
-		 * attributes.getLength(); i++) { System.out.println("-> " +
-		 * attributes.getLocalName(i) + ": " + attributes.getValue(i)); }
-		 */
-
-		if (qName.equals("img")) {
-			titulo.add(attributes.getValue("alt"));
-			url.add(attributes.getValue("src"));
+		if (qName.equals("li")) {
+			programaTemp = new ProgramaResultado();
+		} else if (qName.equals("img")) {
+			programaTemp.setTitulo(attributes.getValue("alt"));
 		} else if (qName.equals("a")) {
-			enlace.add(attributes.getValue("href"));
-			idProgram.add(attributes.getValue("href").split("/")[4]);
+			programaTemp.setId(attributes.getValue("href").split("/")[4]);
+		}
+	}
+
+	@Override
+	public void endElement(String uri, String localName, String qName) throws SAXException {
+		if (qName.equals("li")) {
+			programaList.add(programaTemp);
 		}
 	}
 
@@ -71,19 +72,7 @@ public class ManejadorValidacion extends DefaultHandler {
 		return errores;
 	}
 
-	public List<String> getTitulo() {
-		return titulo;
-	}
-
-	public List<String> getUrl() {
-		return url;
-	}
-
-	public List<String> getEnlace() {
-		return enlace;
-	}
-
-	public List<String> getIdPrograma() {
-		return idProgram;
+	public List<ProgramaResultado> getPrograma() {
+		return programaList;
 	}
 }
