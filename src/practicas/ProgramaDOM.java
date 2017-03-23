@@ -29,14 +29,22 @@ import utilidades.Utils;
 
 public class ProgramaDOM {
 	public static void main(String[] args) throws Exception {
-		getListProgramDOM(5, null);
+		getListProgramDOM(5);
 	}
 
 	public static void getListProgramDOM() {
-		getListProgramDOM(null, null);
+		getListProgramDOM(null);
 	}
 
-	public static void getListProgramDOM(Integer max, String id) {
+	public static void getListProgramDOM(Integer max) {
+		getListProgramDOM(max, null, null);
+	}
+
+	public static void getListProgramDOM(String id, String titulo) {
+		getListProgramDOM(null, id, titulo);
+	}
+
+	private static void getListProgramDOM(Integer max, String id, String titulo) {
 		try {
 			DocumentBuilderFactory factoria = DocumentBuilderFactory.newInstance();
 
@@ -98,7 +106,7 @@ public class ProgramaDOM {
 
 		} catch (ParserConfigurationException | SAXException | IOException | XMLStreamException e1) {
 			e1.printStackTrace();
-		} 
+		}
 
 	}
 
@@ -150,7 +158,7 @@ public class ProgramaDOM {
 		writer.writeEndDocument();
 
 		writer.close();
-		
+
 	}
 
 	private static List<EmisionDOM> getBroadcastFromChannel(String idChannel) {

@@ -1,6 +1,7 @@
 package controlador;
 
 import java.io.File;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,8 +13,10 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import practicas.ManejadorValidacion;
+import practicas.ProgramaDOM;
 import practicas.ProgramaSAX;
 import programas.TipoPrograma;
+import utilidades.Utils;
 
 public class ServicioALaCarta {
 
@@ -31,7 +34,7 @@ public class ServicioALaCarta {
 			unmarshaller = contexto.createUnmarshaller();
 			marshaller = contexto.createMarshaller();
 			marshaller.setProperty("jaxb.formatted.output", true);
-			marshaller.setProperty("jaxb.schemaLocation","http://www.um.es/as xml/ejercicio1-2.xsd");
+			marshaller.setProperty("jaxb.schemaLocation", "http://www.um.es/as xml/ejercicio1-2.xsd");
 		} catch (JAXBException e) {
 			e.printStackTrace();
 		}
@@ -55,11 +58,37 @@ public class ServicioALaCarta {
 	}
 
 	public TipoPrograma getPrograma(String id) throws JAXBException {
-			return (TipoPrograma) unmarshaller.unmarshal(new File("xml-bd/"+id+".xml"));
+		ckeckIfExistBBDD();
+		File program = recuperarPrograma(id);
+		return (TipoPrograma) unmarshaller.unmarshal(program);
+	}
+	
+	private File recuperarPrograma(String id){
+		File file = new File("xml-bd/" + id + ".xml");
+		if(!file.exists()){
+			ProgramaDOM.getListProgramDOM(id, null);
+			file = new File("xml-bd/" + id + ".xml");
+			if(!file.exists()){
+				// error no existe el id o está mal introducido
+			}
+		}
+		Date lastUpdate = new Date(file.lastModified());
+		if(lastUpdate.before(Utils.ayer())){
+			//actualizada
+		}
+		return file;
+	}
+
+	private void ckeckIfExistBBDD() {
+		File folder = new File("xml-bd");
+		if (!folder.exists())
+			folder.mkdir();
+
 	}
 
 	public String getProgramaAtom(String id) throws JAXBException {
-		TipoPrograma program = getPrograma(id);	//FIXME Realizar transformación Atom
+		TipoPrograma program = getPrograma(id); // FIXME Realizar transformación
+												// Atom
 
 		return null;
 	}
