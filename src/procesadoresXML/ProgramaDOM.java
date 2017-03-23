@@ -108,6 +108,12 @@ public class ProgramaDOM {
 		writer.writeStartDocument();
 		writer.writeStartElement("programa");
 
+		// > Espacio de nombres por omisión
+		writer.writeNamespace("", "http://www.example.org/ejercicio1-2");
+		writer.writeNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
+		writer.writeAttribute("http://www.w3.org/2001/XMLSchema-instance", "schemaLocation",
+				"http://www.example.org/ejercicio1-2 ejercicio1-2.xsd");
+
 		writer.writeAttribute("identificador", identificador);
 
 		writer.writeStartElement("nombre");

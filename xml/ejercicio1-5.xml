@@ -1,9 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom">
-<subtitle/>
-<link href="" rel="self"/>
-<updated/>
-<author>
-<name>Televisión Española</name>
-</author>
-<id/>
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns:tns="http://www.example.org/ejercicio1-2" xmlns="http://www.w3.org/2005/Atom">
+	<subtitle />
+	<link href="" rel="self" />
+	<updated />
+	<author>
+		<name>Televisión Española</name>
+	</author>
+	<id />
 </feed>

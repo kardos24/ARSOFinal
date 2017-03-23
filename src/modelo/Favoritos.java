@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlType;
 
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "favoritos", propOrder = {"id","programList"})
+@XmlType(name = "", propOrder = {"id","programList"})
 @XmlRootElement(name = "favoritos")
 public class Favoritos {
 
