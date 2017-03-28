@@ -1,19 +1,12 @@
 package procesadoresXML;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 public class ProgramaSAX {
 
@@ -36,8 +29,8 @@ public class ProgramaSAX {
 					"http://www.rtve.es/m/alacarta/programsbychannel/?media=tve&channel=la1&modl=canales&filterFindPrograms=todas",
 					manejador);
 
-			Pattern p = Pattern.compile("/m/alacarta/videos/(.+)/\\?media=tve");
-			Matcher m;
+			//Pattern p = Pattern.compile("/m/alacarta/videos/(.+)/\\?media=tve");
+			//Matcher m;
 
 			if (verbose) {
 				System.out.println("Inicio analisis con SAX");

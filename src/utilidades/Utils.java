@@ -50,5 +50,4 @@ public class Utils {
 
 		return formateador.format(fecha);
 	}
-
 }

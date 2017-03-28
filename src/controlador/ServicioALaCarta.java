@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -45,8 +44,8 @@ public class ServicioALaCarta {
 			unmarshallerProgram = contextP.createUnmarshaller();
 			marshallerProgram = contextP.createMarshaller();
 			marshallerProgram.setProperty("jaxb.formatted.output", true);
-			marshallerProgram.setProperty("jaxb.schemaLocation", "http://www.um.es/as xml/ejercicio1-2.xsd");
-			
+			marshallerProgram.setProperty("jaxb.schemaLocation",
+					"http://www.um.es/as xml/ejercicio1-2.xsd");
 
 			JAXBContext contextF = JAXBContext.newInstance(Favoritos.class);
 			unmarshallerFavoritos = contextF.createUnmarshaller();
@@ -74,19 +73,21 @@ public class ServicioALaCarta {
 		}
 	}
 
-	public TipoPrograma getPrograma(String id) throws IllegalArgumentException, JAXBException {
+	public TipoPrograma getPrograma(String id) throws IllegalArgumentException,
+			JAXBException {
 		File program = recuperarPrograma(id);
 		return (TipoPrograma) unmarshallerProgram.unmarshal(program);
 	}
 
 	public String getProgramaAtom(String id) throws Exception {
-		TipoPrograma program = getPrograma(id); // FIXME Realizar transformación
-												// Atom
+		TipoPrograma program = getPrograma(id);
+		// FIXME Realizar transformación Atom
 
 		return null;
 	}
 
-	public TipoPrograma getProgramaFiltrado(String id, String titulo) throws IllegalArgumentException, JAXBException {
+	public TipoPrograma getProgramaFiltrado(String id, String titulo)
+			throws IllegalArgumentException, JAXBException {
 		TipoPrograma programResult;
 		programResult = getPrograma(id);
 		Iterator<TipoEmision> it = programResult.getEmision().iterator();
@@ -108,7 +109,8 @@ public class ServicioALaCarta {
 		File file = new File(getPathProgram(id));
 		// Si no existe se recupera
 		// Si existe y es antiguo, mayor a un 1 día también se recupera
-		if (!file.exists() || new Date(file.lastModified()).before(Utils.ayer())) {
+		if (!file.exists()
+				|| new Date(file.lastModified()).before(Utils.ayer())) {
 			ProgramaDOM.getListProgramDOM(id);
 			file = new File(getPathProgram(id));
 			if (!file.exists()) {
@@ -126,35 +128,42 @@ public class ServicioALaCarta {
 
 	}
 
-	/////////////////////// GESTIÓN FAVORITOS /////////////////////////////
+	// ///////////////////// GESTIÓN FAVORITOS /////////////////////////////
 	public String crearFavoritos() throws JAXBException {
 		Favoritos fav = new Favoritos();
-		marshallerFavoritos.marshal(fav, new File(getPathFavoritos(fav.getId())));
+		marshallerFavoritos.marshal(fav,
+				new File(getPathFavoritos(fav.getId())));
 		return fav.getId();
 	}
 
-	public boolean addProgramaFavorito(String idFavoritos, String idPrograma) throws JAXBException  {
+	public boolean addProgramaFavorito(String idFavoritos, String idPrograma)
+			throws JAXBException {
 		Favoritos fav = getFavoritos(idFavoritos);
 		List<ProgramaResultado> listProgram = getListadoProgramas();
-		Optional<ProgramaResultado> program = listProgram.stream().filter(id->id.getId().equals(idPrograma)).findAny();
+		Optional<ProgramaResultado> program = listProgram.stream()
+				.filter(id -> id.getId().equals(idPrograma)).findAny();
 
-		if(program.isPresent()){
+		if (program.isPresent()) {
 			Boolean addResult = fav.getProgramList().add(program.get());
-			marshallerFavoritos.marshal(fav, new File(getPathFavoritos(fav.getId())));
+			marshallerFavoritos.marshal(fav,
+					new File(getPathFavoritos(fav.getId())));
 			return addResult;
 		} else {
 			return false;
 		}
 	}
 
-	public boolean removeProgramaFavorito(String idFavoritos, String idPrograma) throws JAXBException {
+	public boolean removeProgramaFavorito(String idFavoritos, String idPrograma)
+			throws JAXBException {
 		Favoritos fav = getFavoritos(idFavoritos);
 		List<ProgramaResultado> listProgram = getListadoProgramas();
-		Optional<ProgramaResultado> program = listProgram.stream().filter(id->id.getId().equals(idPrograma)).findAny();
+		Optional<ProgramaResultado> program = listProgram.stream()
+				.filter(id -> id.getId().equals(idPrograma)).findAny();
 
-		if(program.isPresent()){
+		if (program.isPresent()) {
 			Boolean removeResult = fav.getProgramList().remove(program.get());
-			marshallerFavoritos.marshal(fav, new File(getPathFavoritos(fav.getId())));
+			marshallerFavoritos.marshal(fav,
+					new File(getPathFavoritos(fav.getId())));
 			return removeResult;
 		} else {
 			return false;
@@ -169,12 +178,12 @@ public class ServicioALaCarta {
 			throw new IllegalArgumentException("El id no existe");
 		}
 	}
-	
-	private String getPathFavoritos(String id){
+
+	private String getPathFavoritos(String id) {
 		return "favoritos-" + id + ".xml";
 	}
-	
-	private String getPathProgram(String id){
+
+	private String getPathProgram(String id) {
 		return XML_BD + "/" + id + ".xml";
 	}
 }
