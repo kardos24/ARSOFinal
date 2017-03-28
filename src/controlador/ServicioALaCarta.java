@@ -1,6 +1,7 @@
 package controlador;
 
 import java.io.File;
+import java.io.StringWriter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -13,6 +14,13 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.util.JAXBSource;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 
 import modelo.Favoritos;
 import modelo.ListadoProgramas;
@@ -81,9 +89,19 @@ public class ServicioALaCarta {
 
 	public String getProgramaAtom(String id) throws Exception {
 		TipoPrograma program = getPrograma(id);
-		// FIXME Realizar transformación Atom
+		// FIXME Hay que arreglar StAX para que incluya el espacio de nombrados
+		TransformerFactory factoria = TransformerFactory.newInstance();
+		Transformer transformador = factoria.newTransformer(new StreamSource(
+				"xml/ejercicio1-5.xsl"));
 
-		return null;
+		StringWriter contenido = new StringWriter();
+
+		JAXBSource origen = new JAXBSource(marshallerProgram, program);
+		Result destino = new StreamResult(contenido);
+
+		transformador.transform(origen, destino);
+
+		return contenido.toString();
 	}
 
 	public TipoPrograma getProgramaFiltrado(String id, String titulo)
