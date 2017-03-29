@@ -1,4 +1,4 @@
-package modelo;
+package ejercicio4;
 
 import java.util.Date;
 

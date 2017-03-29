@@ -13,9 +13,6 @@
 		<title>
 			<xsl:value-of select="e:nombre" />
 		</title>
-		<subtitle>
-			<xsl:value-of select="e:url-portada" />
-		</subtitle>
 		<link href="" rel="self" />
 		<link href="{e:url-programa}" />
 		<updated>
@@ -27,6 +24,9 @@
 		<id>
 			<xsl:value-of select="@identificador" />
 		</id>
+		<logo>
+			<xsl:value-of select="e:url-portada" />
+		</logo>
 		<xsl:apply-templates select="e:emision" />
 	</xsl:template>
 

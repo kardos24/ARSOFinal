@@ -8,17 +8,12 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import modelo.ProgramaResultado;
-
-public class ManejadorValidacion extends DefaultHandler {
-
+public class ManejadorSAX extends DefaultHandler {
 	private List<SAXParseException> errores;
-
 	private List<ProgramaResultado> programaList;
-
 	private ProgramaResultado programaTemp;
 
-	public ManejadorValidacion() {
+	public ManejadorSAX() {
 		errores = new LinkedList<>();
 		programaList = new LinkedList<>();
 	}
@@ -31,7 +26,8 @@ public class ManejadorValidacion extends DefaultHandler {
 	}
 
 	@Override
-	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+	public void startElement(String uri, String localName, String qName,
+			Attributes attributes) throws SAXException {
 		if (qName.equals("li")) {
 			programaTemp = new ProgramaResultado();
 		} else if (qName.equals("img")) {
@@ -42,7 +38,8 @@ public class ManejadorValidacion extends DefaultHandler {
 	}
 
 	@Override
-	public void endElement(String uri, String localName, String qName) throws SAXException {
+	public void endElement(String uri, String localName, String qName)
+			throws SAXException {
 		if (qName.equals("li")) {
 			programaList.add(programaTemp);
 		}
@@ -51,7 +48,8 @@ public class ManejadorValidacion extends DefaultHandler {
 	@Override
 	public void endDocument() throws SAXException {
 		if (!errores.isEmpty()) {
-			System.out.println("El documento contiene " + errores.size() + " error(es):");
+			System.out.println("El documento contiene " + errores.size()
+					+ " error(es):");
 			for (SAXParseException e : errores) {
 				System.out.println("-> " + e.getMessage());
 			}

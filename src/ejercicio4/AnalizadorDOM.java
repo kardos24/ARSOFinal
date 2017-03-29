@@ -23,11 +23,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import modelo.EmisionDOM;
-import utilidades.ParcheEjercicio4;
-import utilidades.Utils;
+import servicio.utilidades.Utilidades;
 
-public class ProgramaDOM {
+public class AnalizadorDOM {
 	public static void main(String[] args) throws Exception {
 		getListProgramDOM(5);
 	}
@@ -46,13 +44,14 @@ public class ProgramaDOM {
 
 	private static void getListProgramDOM(Integer max, String id) {
 		try {
-			DocumentBuilderFactory factoria = DocumentBuilderFactory.newInstance();
+			DocumentBuilderFactory factoria = DocumentBuilderFactory
+					.newInstance();
 
 			DocumentBuilder analizador;
 			analizador = factoria.newDocumentBuilder();
 
-			Document document = analizador.parse(
-					"http://www.rtve.es/m/alacarta/programsbychannel/?media=tve&channel=la1&modl=canales&filterFindPrograms=todas");
+			Document document = analizador
+					.parse("http://www.rtve.es/m/alacarta/programsbychannel/?media=tve&channel=la1&modl=canales&filterFindPrograms=todas");
 
 			// Pattern pattern =
 			// Pattern.compile("/m/alacarta/videos/(.+)/\\?media=tve");
@@ -83,36 +82,45 @@ public class ProgramaDOM {
 						urlPrograma = e.getAttribute("href");
 
 						identificador = urlPrograma.split("/")[4];
-					} else if (n.getNodeName().equals("p") && n.getFirstChild().getNodeName().equals("img")) {
+					} else if (n.getNodeName().equals("p")
+							&& n.getFirstChild().getNodeName().equals("img")) {
 						e = (Element) n.getFirstChild();
 						urlImagen = e.getAttribute("src");
 					}
 				}
-				if (identificador != null && (id == null || Objects.equals(identificador, id))) {
+				if (identificador != null
+						&& (id == null || Objects.equals(identificador, id))) {
 					emisiones = getBroadcastFromChannel(identificador, 1);
-					writeXMLWithStax(identificador, nombre, urlPrograma, urlImagen, emisiones);
+					writeXMLWithStax(identificador, nombre, urlPrograma,
+							urlImagen, emisiones);
 				}
 			}
 
-		} catch (ParserConfigurationException | SAXException | IOException | XMLStreamException e1) {
+		} catch (ParserConfigurationException | SAXException | IOException
+				| XMLStreamException e1) {
 			e1.printStackTrace();
 		}
 
 	}
 
-	private static void writeXMLWithStax(String identificador, String nombre, String urlPrograma, String urlImagen,
-			List<EmisionDOM> emisiones) throws FileNotFoundException, XMLStreamException {
+	private static void writeXMLWithStax(String identificador, String nombre,
+			String urlPrograma, String urlImagen, List<EmisionDOM> emisiones)
+			throws FileNotFoundException, XMLStreamException {
 		XMLOutputFactory xof = XMLOutputFactory.newInstance();
-		XMLStreamWriter writer = xof.createXMLStreamWriter(new FileOutputStream("xml-bd/" + identificador + ".xml"));
+		XMLStreamWriter writer = xof
+				.createXMLStreamWriter(new FileOutputStream("xml-bd/"
+						+ identificador + ".xml"));
 
 		writer.writeStartDocument();
 		writer.writeStartElement("programa");
 
 		// > Espacio de nombres por omisión
 		writer.writeNamespace("", "http://www.example.org/ejercicio1-2");
-		writer.writeNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
-		writer.writeAttribute("http://www.w3.org/2001/XMLSchema-instance", "schemaLocation",
-				"http://www.example.org/ejercicio1-2 ejercicio1-2.xsd");
+		writer.writeNamespace("xsi",
+				"http://www.w3.org/2001/XMLSchema-instance");
+		writer.writeAttribute("http://www.w3.org/2001/XMLSchema-instance",
+				"schemaLocation",
+				"http://www.example.org/ejercicio2 ejercicio2.xsd");
 
 		writer.writeAttribute("identificador", identificador);
 
@@ -136,7 +144,7 @@ public class ProgramaDOM {
 			writer.writeEndElement(); // titulo
 
 			writer.writeStartElement("fecha");
-			writer.writeCharacters(Utils.convertirFechaTexto(e.getFecha()));
+			writer.writeCharacters(Utilidades.convertirFechaTexto(e.getFecha()));
 			writer.writeEndElement(); // fecha
 
 			writer.writeStartElement("tiempo-emision");
@@ -163,7 +171,8 @@ public class ProgramaDOM {
 		List<EmisionDOM> channelListPage = new LinkedList<>();
 		do {
 			channelListPage.clear();
-			channelListPage.addAll(getBroadcastFromChannel(idChannel, i.getAndIncrement()));
+			channelListPage.addAll(getBroadcastFromChannel(idChannel,
+					i.getAndIncrement()));
 			channelListResult.addAll(channelListPage);
 
 		} while (!channelListPage.isEmpty());
@@ -171,20 +180,27 @@ public class ProgramaDOM {
 		return channelListResult;
 	}
 
-	private static List<EmisionDOM> getBroadcastFromChannel(String idChannel, Integer numPage) {
+	private static List<EmisionDOM> getBroadcastFromChannel(String idChannel,
+			Integer numPage) {
 		List<EmisionDOM> emisionList = new LinkedList<>();
 		try {
 			if (numPage == null)
 				numPage = 1;
 
-			DocumentBuilderFactory factoria = DocumentBuilderFactory.newInstance();
+			DocumentBuilderFactory factoria = DocumentBuilderFactory
+					.newInstance();
 
 			DocumentBuilder analizador;
 			analizador = factoria.newDocumentBuilder();
 
-			Document document = analizador.parse(ParcheEjercicio4.retornarXML("http://www.rtve.es/m/alacarta/videos/"
-					+ idChannel + "/multimedialist_pag.shtml/?media=tve&contentKey=&programName=" + idChannel
-					+ "&media=tve&paginaBusqueda=" + numPage));
+			Document document = analizador
+					.parse(Utilidades
+							.retornarXML("http://www.rtve.es/m/alacarta/videos/"
+									+ idChannel
+									+ "/multimedialist_pag.shtml/?media=tve&contentKey=&programName="
+									+ idChannel
+									+ "&media=tve&paginaBusqueda="
+									+ numPage));
 
 			NodeList elementos = document.getElementsByTagName("li");
 
@@ -211,7 +227,7 @@ public class ProgramaDOM {
 						if (text[0].startsWith("hoy")) {
 							fecha = new Date();
 						} else if (text[0].startsWith("ayer")) {
-							fecha = Utils.ayer();
+							fecha = Utilidades.ayer();
 						} else if (text[0].startsWith("pasado")) {
 							int referencia;
 							switch (text[0].split(" ")[1]) {
@@ -239,9 +255,9 @@ public class ProgramaDOM {
 							default:
 								referencia = 0;
 							}
-							fecha = Utils.calcularFecha(referencia);
+							fecha = Utilidades.calcularFecha(referencia);
 						} else {
-							fecha = Utils.convertirTextoFecha(text[0]);
+							fecha = Utilidades.convertirTextoFecha(text[0]);
 						}
 					} else if (n.getNodeName().equals("a")) {
 						e = (Element) n;

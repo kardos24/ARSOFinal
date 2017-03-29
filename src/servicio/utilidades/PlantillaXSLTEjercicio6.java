@@ -1,4 +1,4 @@
-package utilidades;
+package servicio.utilidades;
 
 import java.io.FileInputStream;
 import java.io.InputStream;

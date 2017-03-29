@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns:e="http://www.example.org/ejercicio2" xmlns="http://www.w3.org/2005/Atom">
 	<title>Acacias 38</title>
-	<subtitle>http://img.rtve.es/imagenes/acacias-38/1425305370705.png
-	</subtitle>
 	<link href="" rel="self" />
 	<link href="http://www.rtve.es/m/alacarta/videos/acacias-38/?media=tve" />
 	<updated>2017-02-03</updated>
@@ -10,6 +8,7 @@
 		<name>Televisión Española</name>
 	</author>
 	<id>acacias-38</id>
+	<logo>http://img.rtve.es/imagenes/acacias-38/1425305370705.png</logo>
 	<entry>
 		<title>Capítulo 447</title>
 		<link

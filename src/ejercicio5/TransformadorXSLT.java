@@ -10,11 +10,10 @@ import javax.xml.transform.stream.StreamSource;
 public class TransformadorXSLT {
 	public static void main(String[] args) throws Exception {
 		TransformerFactory factoria = TransformerFactory.newInstance();
-		Transformer transformador = factoria.newTransformer(new StreamSource("xml/ejercicio1-5.xsl"));
+		Transformer transformador = factoria.newTransformer(new StreamSource("xml/ejercicio5.xsl"));
 
-		System.out.println("Transformando!");
-		Source origen = new StreamSource("xml/ejercicio1-2.xml");
-		Result destino = new StreamResult("xml/ejercicio1-5.xml");
+		Source origen = new StreamSource("xml/ejercicio2.xml");
+		Result destino = new StreamResult("xml/ejercicio5.xml");
 
 		transformador.transform(origen, destino);
 	}

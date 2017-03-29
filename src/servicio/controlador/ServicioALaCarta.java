@@ -1,7 +1,15 @@
 package servicio.controlador;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -16,25 +24,34 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.util.JAXBSource;
 import javax.xml.transform.Result;
-import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import ejercicio3.ManejadorValidacion;
-import ejercicio3.ProgramaSAX;
-import ejercicio4.ProgramaDOM;
+import ejercicio3.ManejadorSAX;
+import ejercicio3.AnalizadorSAX;
+import ejercicio3.ProgramaResultado;
+import ejercicio4.AnalizadorDOM;
 import modelo.Favoritos;
 import modelo.ListadoProgramas;
-import modelo.ProgramaResultado;
 import servicio.tipos.TipoEmision;
 import servicio.tipos.TipoPrograma;
-import utilidades.Utils;
+import servicio.utilidades.Utilidades;
+import static servicio.utilidades.Constantes.*;
 
 public class ServicioALaCarta {
 
-	private static final String XML_BD = "xml-bd";
+	// Bloque de codigo que comprueba si existen las carpetas xml y xml-bd
+	// En caso que no existan, las crean.
+	static {
+		File[] folders = { new File("xml"), new File("xml-bd") };
+
+		for (File folder : folders) {
+			if (!folder.exists())
+				folder.mkdir();
+		}
+	}
 
 	private static ServicioALaCarta instance;
 
@@ -48,7 +65,7 @@ public class ServicioALaCarta {
 
 	private ServicioALaCarta() {
 		try {
-			JAXBContext contextP = JAXBContext.newInstance("programas");
+			JAXBContext contextP = JAXBContext.newInstance("servicio.tipos");
 			unmarshallerProgram = contextP.createUnmarshaller();
 			marshallerProgram = contextP.createMarshaller();
 			marshallerProgram.setProperty("jaxb.formatted.output", true);
@@ -73,7 +90,7 @@ public class ServicioALaCarta {
 	}
 
 	public List<ProgramaResultado> getListadoProgramas() {
-		ManejadorValidacion manager = ProgramaSAX.getManagerAnalizeSAX(false);
+		ManejadorSAX manager = AnalizadorSAX.getManagerAnalizeSAX(false);
 		if (manager == null) {
 			return new LinkedList<>();
 		} else {
@@ -82,17 +99,21 @@ public class ServicioALaCarta {
 	}
 
 	public TipoPrograma getPrograma(String id) throws IllegalArgumentException,
-			JAXBException {
+			JAXBException, UnsupportedEncodingException, FileNotFoundException {
 		File program = recuperarPrograma(id);
-		return (TipoPrograma) unmarshallerProgram.unmarshal(program);
+
+		// Para poner la codificacion UTF-8
+		InputStream is = new FileInputStream(program);
+		InputStreamReader isr = new InputStreamReader(is, "UTF-8");
+
+		return (TipoPrograma) unmarshallerProgram.unmarshal(isr);
 	}
 
 	public String getProgramaAtom(String id) throws Exception {
 		TipoPrograma program = getPrograma(id);
-		// FIXME Hay que arreglar StAX para que incluya el espacio de nombrados
 		TransformerFactory factoria = TransformerFactory.newInstance();
 		Transformer transformador = factoria.newTransformer(new StreamSource(
-				"xml/ejercicio1-5.xsl"));
+				"xml/ejercicio5.xsl"));
 
 		StringWriter contenido = new StringWriter();
 
@@ -105,7 +126,8 @@ public class ServicioALaCarta {
 	}
 
 	public TipoPrograma getProgramaFiltrado(String id, String titulo)
-			throws IllegalArgumentException, JAXBException {
+			throws IllegalArgumentException, JAXBException,
+			UnsupportedEncodingException, FileNotFoundException {
 		TipoPrograma programResult;
 		programResult = getPrograma(id);
 		Iterator<TipoEmision> it = programResult.getEmision().iterator();
@@ -123,13 +145,12 @@ public class ServicioALaCarta {
 	}
 
 	private File recuperarPrograma(String id) throws IllegalArgumentException {
-		ckeckIfExistBBDD();
 		File file = new File(getPathProgram(id));
 		// Si no existe se recupera
 		// Si existe y es antiguo, mayor a un 1 día también se recupera
 		if (!file.exists()
-				|| new Date(file.lastModified()).before(Utils.ayer())) {
-			ProgramaDOM.getListProgramDOM(id);
+				|| new Date(file.lastModified()).before(Utilidades.ayer())) {
+			AnalizadorDOM.getListProgramDOM(id);
 			file = new File(getPathProgram(id));
 			if (!file.exists()) {
 				// error no existe el id o está mal introducido
@@ -137,13 +158,6 @@ public class ServicioALaCarta {
 			}
 		}
 		return file;
-	}
-
-	private void ckeckIfExistBBDD() {
-		File folder = new File(XML_BD);
-		if (!folder.exists())
-			folder.mkdir();
-
 	}
 
 	// ///////////////////// GESTIÓN FAVORITOS /////////////////////////////
@@ -202,6 +216,28 @@ public class ServicioALaCarta {
 	}
 
 	private String getPathProgram(String id) {
-		return XML_BD + "/" + id + ".xml";
+		return BBDD_FOLDER + "/" + id + ".xml";
+	}
+
+	public static void main(String[] args) throws Exception {
+		List<ProgramaResultado> l = ServicioALaCarta.getInstance()
+				.getListadoProgramas();
+		for (ProgramaResultado programa : l) {
+			System.out.println(programa.getTitulo() + " - " + programa.getId());
+		}
+
+		for (int i = 0; i < 5; i++) {
+			TipoPrograma p = ServicioALaCarta.getInstance().getPrograma(
+					l.get(i).getId());
+			
+			System.out.println(p.getNombre());
+			System.out.println("\tId: " + p.getIdentificador());
+			System.out.println("\tURL Portada: " + p.getUrlPortada());
+			System.out.println("\tURL Programa: " + p.getUrlPrograma());
+			System.out.println("\tNum. emisiones: " + p.getEmision().size());
+		}
+
+		System.out.println(ServicioALaCarta.getInstance().getProgramaAtom(
+				l.get(0).getId()));
 	}
 }
