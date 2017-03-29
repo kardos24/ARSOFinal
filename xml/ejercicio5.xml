@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns:e="http://www.example.org/ejercicio2" xmlns="http://www.w3.org/2005/Atom">
+	<title>Acacias 38</title>
+	<link href="" rel="self" />
+	<link href="http://www.rtve.es/m/alacarta/videos/acacias-38/?media=tve" />
+	<updated>2017-02-03</updated>
+	<author>
+		<name>Televisión Española</name>
+	</author>
+	<id>acacias-38</id>
+	<logo>http://img.rtve.es/imagenes/acacias-38/1425305370705.png</logo>
+	<entry>
+		<title>Capítulo 447</title>
+		<link
+			href="http://www.rtve.es/m/alacarta/videos/acacias-38/acacias-38-capitulo-447/3898958/?media=tve" />
+		<id>acacias-38</id>
+		<updated>2017-02-03</updated>
+		<summary>
+			Tiempo de emisión: 00:54:44
+		</summary>
+		<author>
+			<name>Televisión Española</name>
+		</author>
+	</entry>
+	<entry>
+		<title>Capítulo 446</title>
+		<link
+			href="http://www.rtve.es/m/alacarta/videos/acacias-38/acacias-38-capitulo-446/3897001/?media=tve" />
+		<id>acacias-38</id>
+		<updated>2017-02-02</updated>
+		<summary>
+			Tiempo de emisión: 00:55:50
+		</summary>
+		<author>
+			<name>Televisión Española</name>
+		</author>
+	</entry>
+</feed>

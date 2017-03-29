@@ -1,0 +1,10 @@
+<!ELEMENT programa (nombre, url, url-portada, emision+)>
+<!ELEMENT nombre (#PCDATA)>
+<!ELEMENT url (#PCDATA)>
+<!ELEMENT url-portada (#PCDATA)>
+<!ELEMENT emision (titulo, fecha, tiempo-emision, url)>
+<!ELEMENT titulo (#PCDATA)>
+<!ELEMENT fecha (#PCDATA)>
+<!ELEMENT tiempo-emision (#PCDATA)>
+<!ATTLIST programa
+	identificador CDATA #REQUIRED>

@@ -1,1 +1,64 @@
-<?xml version="1.0" ?><programa identificador="amar-en-tiempos-revueltos"><nombre>Amar en tiempos revueltos</nombre><url-programa>/m/alacarta/videos/amar-en-tiempos-revueltos/?media=tve</url-programa><url-portada>http://img.rtve.es/imagenes/amar-tiempos-revueltos/1488798760813.png</url-portada><emision><titulo>T7 - Capítulo 256 - Final 2ª Parte</titulo><fecha>2012-11-16</fecha><tiempo-emision>56:12</tiempo-emision><url-emision>/m/alacarta/videos/amar-en-tiempos-revueltos/amar-tiempos-revueltos-t7-capitulo-256-final-2-parte/1580482/?media=tve</url-emision></emision><emision><titulo>T7 - Capítulo 255 - Final 1ª parte</titulo><fecha>2012-11-16</fecha><tiempo-emision>54:55</tiempo-emision><url-emision>/m/alacarta/videos/amar-en-tiempos-revueltos/amar-tiempos-revueltos-t7-capitulo-255-final-1-parte/1580102/?media=tve</url-emision></emision><emision><titulo>T7 - Capítulo 254</titulo><fecha>2012-11-15</fecha><tiempo-emision>54:42</tiempo-emision><url-emision>/m/alacarta/videos/amar-en-tiempos-revueltos/amar-tiempos-revueltos-t7-capitulo-254/1580324/?media=tve</url-emision></emision><emision><titulo>T7 - Capítulo 253</titulo><fecha>2012-11-13</fecha><tiempo-emision>55:10</tiempo-emision><url-emision>/m/alacarta/videos/amar-en-tiempos-revueltos/amar-tiempos-revueltos-t7-capitulo-253/1578684/?media=tve</url-emision></emision><emision><titulo>T7 - Capítulo 252</titulo><fecha>2012-11-12</fecha><tiempo-emision>54:03</tiempo-emision><url-emision>/m/alacarta/videos/amar-en-tiempos-revueltos/amar-tiempos-revueltos-t7-capitulo-252/1577813/?media=tve</url-emision></emision><emision><titulo>T7 - Capítulo 251</titulo><fecha>2012-11-09</fecha><tiempo-emision>54:26</tiempo-emision><url-emision>/m/alacarta/videos/amar-en-tiempos-revueltos/amar-tiempos-revueltos-t7-capitulo-251/1574546/?media=tve</url-emision></emision><emision><titulo>T7 - Capítulo 250</titulo><fecha>2012-11-08</fecha><tiempo-emision>54:44</tiempo-emision><url-emision>/m/alacarta/videos/amar-en-tiempos-revueltos/amar-tiempos-revueltos-t7-capitulo-250/1574547/?media=tve</url-emision></emision><emision><titulo>T7 - Capítulo 249</titulo><fecha>2012-11-07</fecha><tiempo-emision>54:50</tiempo-emision><url-emision>/m/alacarta/videos/amar-en-tiempos-revueltos/amar-tiempos-revueltos-t7-capitulo-249/1573352/?media=tve</url-emision></emision></programa>
+<?xml version="1.0" ?>
+<programa identificador="amar-en-tiempos-revueltos">
+	<nombre>Amar en tiempos revueltos</nombre>
+	<url-programa>/m/alacarta/videos/amar-en-tiempos-revueltos/?media=tve
+	</url-programa>
+	<url-portada>http://img.rtve.es/imagenes/amar-tiempos-revueltos/1488798760813.png
+	</url-portada>
+	<emision>
+		<titulo>T7 - Capï¿½tulo 256 - Final 2ï¿½ Parte</titulo>
+		<fecha>2012-11-16</fecha>
+		<tiempo-emision>56:12</tiempo-emision>
+		<url-emision>/m/alacarta/videos/amar-en-tiempos-revueltos/amar-tiempos-revueltos-t7-capitulo-256-final-2-parte/1580482/?media=tve
+		</url-emision>
+	</emision>
+	<emision>
+		<titulo>T7 - Capï¿½tulo 255 - Final 1ï¿½ parte</titulo>
+		<fecha>2012-11-16</fecha>
+		<tiempo-emision>54:55</tiempo-emision>
+		<url-emision>/m/alacarta/videos/amar-en-tiempos-revueltos/amar-tiempos-revueltos-t7-capitulo-255-final-1-parte/1580102/?media=tve
+		</url-emision>
+	</emision>
+	<emision>
+		<titulo>T7 - Capï¿½tulo 254</titulo>
+		<fecha>2012-11-15</fecha>
+		<tiempo-emision>54:42</tiempo-emision>
+		<url-emision>/m/alacarta/videos/amar-en-tiempos-revueltos/amar-tiempos-revueltos-t7-capitulo-254/1580324/?media=tve
+		</url-emision>
+	</emision>
+	<emision>
+		<titulo>T7 - Capï¿½tulo 253</titulo>
+		<fecha>2012-11-13</fecha>
+		<tiempo-emision>55:10</tiempo-emision>
+		<url-emision>/m/alacarta/videos/amar-en-tiempos-revueltos/amar-tiempos-revueltos-t7-capitulo-253/1578684/?media=tve
+		</url-emision>
+	</emision>
+	<emision>
+		<titulo>T7 - Capï¿½tulo 252</titulo>
+		<fecha>2012-11-12</fecha>
+		<tiempo-emision>54:03</tiempo-emision>
+		<url-emision>/m/alacarta/videos/amar-en-tiempos-revueltos/amar-tiempos-revueltos-t7-capitulo-252/1577813/?media=tve
+		</url-emision>
+	</emision>
+	<emision>
+		<titulo>T7 - Capï¿½tulo 251</titulo>
+		<fecha>2012-11-09</fecha>
+		<tiempo-emision>54:26</tiempo-emision>
+		<url-emision>/m/alacarta/videos/amar-en-tiempos-revueltos/amar-tiempos-revueltos-t7-capitulo-251/1574546/?media=tve
+		</url-emision>
+	</emision>
+	<emision>
+		<titulo>T7 - Capï¿½tulo 250</titulo>
+		<fecha>2012-11-08</fecha>
+		<tiempo-emision>54:44</tiempo-emision>
+		<url-emision>/m/alacarta/videos/amar-en-tiempos-revueltos/amar-tiempos-revueltos-t7-capitulo-250/1574547/?media=tve
+		</url-emision>
+	</emision>
+	<emision>
+		<titulo>T7 - Capï¿½tulo 249</titulo>
+		<fecha>2012-11-07</fecha>
+		<tiempo-emision>54:50</tiempo-emision>
+		<url-emision>/m/alacarta/videos/amar-en-tiempos-revueltos/amar-tiempos-revueltos-t7-capitulo-249/1573352/?media=tve
+		</url-emision>
+	</emision>
+</programa>
