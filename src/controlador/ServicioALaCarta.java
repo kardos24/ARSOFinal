@@ -28,6 +28,7 @@ import utilidades.Utils;
 public class ServicioALaCarta {
 
 	private static final String XML_BD = "xml-bd";
+	private static final String FOLDER_FAV = "Favoritos";
 
 	private static ServicioALaCarta instance;
 
@@ -162,6 +163,7 @@ public class ServicioALaCarta {
 	}
 
 	public Favoritos getFavoritos(String idFavoritos) throws JAXBException {
+		ckeckIfFolderFavExists();
 		File fileFav = new File(getPathFavoritos(idFavoritos));
 		if (fileFav.exists()) {
 			return (Favoritos) unmarshallerFavoritos.unmarshal(fileFav);
@@ -169,9 +171,15 @@ public class ServicioALaCarta {
 			throw new IllegalArgumentException("El id no existe");
 		}
 	}
+
+	private void ckeckIfFolderFavExists() {
+		File folder = new File(XML_BD + "/" + FOLDER_FAV);
+		if (!folder.exists())
+			folder.mkdir();
+	}
 	
 	private String getPathFavoritos(String id){
-		return "favoritos-" + id + ".xml";
+		return XML_BD + "/" + FOLDER_FAV + "/favoritos-" + id + ".xml";
 	}
 	
 	private String getPathProgram(String id){
