@@ -6,4 +6,4 @@
 //
 
 @javax.xml.bind.annotation.XmlSchema(namespace = "http://www.example.org/ejercicio1-2", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
-package programas;
+package servicio.tipos;

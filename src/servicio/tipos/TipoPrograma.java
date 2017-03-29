@@ -6,7 +6,7 @@
 //
 
 
-package programas;
+package servicio.tipos;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package procesadoresXML;
+package ejercicio3;
 
 import java.util.LinkedList;
 import java.util.List;

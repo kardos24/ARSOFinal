@@ -1,4 +1,4 @@
-package procesadoresXML;
+package ejercicio3;
 
 import java.io.IOException;
 

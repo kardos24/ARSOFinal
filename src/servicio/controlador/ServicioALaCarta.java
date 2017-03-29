@@ -1,4 +1,4 @@
-package controlador;
+package servicio.controlador;
 
 import java.io.File;
 import java.io.StringWriter;
@@ -22,14 +22,14 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import ejercicio3.ManejadorValidacion;
+import ejercicio3.ProgramaSAX;
+import ejercicio4.ProgramaDOM;
 import modelo.Favoritos;
 import modelo.ListadoProgramas;
 import modelo.ProgramaResultado;
-import procesadoresXML.ManejadorValidacion;
-import procesadoresXML.ProgramaDOM;
-import procesadoresXML.ProgramaSAX;
-import programas.TipoEmision;
-import programas.TipoPrograma;
+import servicio.tipos.TipoEmision;
+import servicio.tipos.TipoPrograma;
 import utilidades.Utils;
 
 public class ServicioALaCarta {

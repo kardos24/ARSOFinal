@@ -1,4 +1,4 @@
-package procesadoresXML;
+package ejercicio4;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/ejercicio1-2"
-	xmlns:tns="http://www.example.org/ejercicio1-2" elementFormDefault="qualified">
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/ejercicio2"
+	xmlns:tns="http://www.example.org/ejercicio2" elementFormDefault="qualified">
 
 	<simpleType name="tipo_hora">
 		<restriction base="string">

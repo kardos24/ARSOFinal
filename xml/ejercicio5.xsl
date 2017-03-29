@@ -1,5 +1,5 @@
 <xsl:stylesheet version="1.0"
-	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:e="http://www.example.org/ejercicio1-2">
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:e="http://www.example.org/ejercicio2">
 
 	<xsl:output method="xml" indent="yes" encoding="utf-8" />
 
