@@ -3,11 +3,8 @@ package servicio.controlador;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
@@ -20,6 +17,7 @@ import java.util.Optional;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.JAXBIntrospector;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.util.JAXBSource;
@@ -29,8 +27,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import ejercicio3.ManejadorSAX;
 import ejercicio3.AnalizadorSAX;
+import ejercicio3.ManejadorSAX;
 import ejercicio3.ProgramaResultado;
 import ejercicio4.AnalizadorDOM;
 import modelo.Favoritos;
@@ -38,14 +36,16 @@ import modelo.ListadoProgramas;
 import servicio.tipos.TipoEmision;
 import servicio.tipos.TipoPrograma;
 import servicio.utilidades.Utilidades;
-import static servicio.utilidades.Constantes.*;
 
 public class ServicioALaCarta {
+
+	private static final String XML_BD = "xml-bd";
+	private static final String FOLDER_FAV = "Favoritos";
 
 	// Bloque de codigo que comprueba si existen las carpetas xml y xml-bd
 	// En caso que no existan, las crean.
 	static {
-		File[] folders = { new File("xml"), new File("xml-bd") };
+		File[] folders = { new File("xml"), new File(XML_BD), new File(XML_BD + "/" + FOLDER_FAV) };
 
 		for (File folder : folders) {
 			if (!folder.exists())
@@ -69,8 +69,7 @@ public class ServicioALaCarta {
 			unmarshallerProgram = contextP.createUnmarshaller();
 			marshallerProgram = contextP.createMarshaller();
 			marshallerProgram.setProperty("jaxb.formatted.output", true);
-			marshallerProgram.setProperty("jaxb.schemaLocation",
-					"http://www.um.es/as xml/ejercicio1-2.xsd");
+			marshallerProgram.setProperty("jaxb.schemaLocation", "http://www.um.es/as xml/ejercicio2.xsd");
 
 			JAXBContext contextF = JAXBContext.newInstance(Favoritos.class);
 			unmarshallerFavoritos = contextF.createUnmarshaller();
@@ -98,22 +97,25 @@ public class ServicioALaCarta {
 		}
 	}
 
-	public TipoPrograma getPrograma(String id) throws IllegalArgumentException,
-			JAXBException, UnsupportedEncodingException, FileNotFoundException {
+	public TipoPrograma getPrograma(String id)
+			throws IllegalArgumentException, JAXBException, UnsupportedEncodingException, FileNotFoundException {
 		File program = recuperarPrograma(id);
 
 		// Para poner la codificacion UTF-8
 		InputStream is = new FileInputStream(program);
 		InputStreamReader isr = new InputStreamReader(is, "UTF-8");
-
-		return (TipoPrograma) unmarshallerProgram.unmarshal(isr);
+		
+//		Object obj = unmarshallerProgram.unmarshal(isr);
+//
+//		return (TipoPrograma) obj;
+		
+		return (TipoPrograma) JAXBIntrospector.getValue(unmarshallerProgram.unmarshal(isr));
 	}
 
 	public String getProgramaAtom(String id) throws Exception {
 		TipoPrograma program = getPrograma(id);
 		TransformerFactory factoria = TransformerFactory.newInstance();
-		Transformer transformador = factoria.newTransformer(new StreamSource(
-				"xml/ejercicio5.xsl"));
+		Transformer transformador = factoria.newTransformer(new StreamSource("xml/ejercicio5.xsl"));
 
 		StringWriter contenido = new StringWriter();
 
@@ -126,8 +128,7 @@ public class ServicioALaCarta {
 	}
 
 	public TipoPrograma getProgramaFiltrado(String id, String titulo)
-			throws IllegalArgumentException, JAXBException,
-			UnsupportedEncodingException, FileNotFoundException {
+			throws IllegalArgumentException, JAXBException, UnsupportedEncodingException, FileNotFoundException {
 		TipoPrograma programResult;
 		programResult = getPrograma(id);
 		Iterator<TipoEmision> it = programResult.getEmision().iterator();
@@ -148,8 +149,7 @@ public class ServicioALaCarta {
 		File file = new File(getPathProgram(id));
 		// Si no existe se recupera
 		// Si existe y es antiguo, mayor a un 1 día también se recupera
-		if (!file.exists()
-				|| new Date(file.lastModified()).before(Utilidades.ayer())) {
+		if (!file.exists() || new Date(file.lastModified()).before(Utilidades.ayer())) {
 			AnalizadorDOM.getListProgramDOM(id);
 			file = new File(getPathProgram(id));
 			if (!file.exists()) {
@@ -163,39 +163,34 @@ public class ServicioALaCarta {
 	// ///////////////////// GESTIÓN FAVORITOS /////////////////////////////
 	public String crearFavoritos() throws JAXBException {
 		Favoritos fav = new Favoritos();
-		marshallerFavoritos.marshal(fav,
-				new File(getPathFavoritos(fav.getId())));
+		marshallerFavoritos.marshal(fav, new File(getPathFavoritos(fav.getId())));
 		return fav.getId();
 	}
 
-	public boolean addProgramaFavorito(String idFavoritos, String idPrograma)
-			throws JAXBException {
+	public boolean addProgramaFavorito(String idFavoritos, String idPrograma) throws JAXBException {
 		Favoritos fav = getFavoritos(idFavoritos);
 		List<ProgramaResultado> listProgram = getListadoProgramas();
-		Optional<ProgramaResultado> program = listProgram.stream()
-				.filter(id -> id.getId().equals(idPrograma)).findAny();
+		Optional<ProgramaResultado> program = listProgram.stream().filter(id -> id.getId().equals(idPrograma))
+				.findAny();
 
 		if (program.isPresent()) {
 			Boolean addResult = fav.getProgramList().add(program.get());
-			marshallerFavoritos.marshal(fav,
-					new File(getPathFavoritos(fav.getId())));
+			marshallerFavoritos.marshal(fav, new File(getPathFavoritos(fav.getId())));
 			return addResult;
 		} else {
 			return false;
 		}
 	}
 
-	public boolean removeProgramaFavorito(String idFavoritos, String idPrograma)
-			throws JAXBException {
+	public boolean removeProgramaFavorito(String idFavoritos, String idPrograma) throws JAXBException {
 		Favoritos fav = getFavoritos(idFavoritos);
 		List<ProgramaResultado> listProgram = getListadoProgramas();
-		Optional<ProgramaResultado> program = listProgram.stream()
-				.filter(id -> id.getId().equals(idPrograma)).findAny();
+		Optional<ProgramaResultado> program = listProgram.stream().filter(id -> id.getId().equals(idPrograma))
+				.findAny();
 
 		if (program.isPresent()) {
 			Boolean removeResult = fav.getProgramList().remove(program.get());
-			marshallerFavoritos.marshal(fav,
-					new File(getPathFavoritos(fav.getId())));
+			marshallerFavoritos.marshal(fav, new File(getPathFavoritos(fav.getId())));
 			return removeResult;
 		} else {
 			return false;
@@ -212,24 +207,22 @@ public class ServicioALaCarta {
 	}
 
 	private String getPathFavoritos(String id) {
-		return "favoritos-" + id + ".xml";
+		return XML_BD + "/" + FOLDER_FAV + "/favoritos-" + id + ".xml";
 	}
 
 	private String getPathProgram(String id) {
-		return BBDD_FOLDER + "/" + id + ".xml";
+		return XML_BD + "/" + id + ".xml";
 	}
 
 	public static void main(String[] args) throws Exception {
-		List<ProgramaResultado> l = ServicioALaCarta.getInstance()
-				.getListadoProgramas();
+		List<ProgramaResultado> l = ServicioALaCarta.getInstance().getListadoProgramas();
 		for (ProgramaResultado programa : l) {
 			System.out.println(programa.getTitulo() + " - " + programa.getId());
 		}
 
 		for (int i = 0; i < 5; i++) {
-			TipoPrograma p = ServicioALaCarta.getInstance().getPrograma(
-					l.get(i).getId());
-			
+			TipoPrograma p = ServicioALaCarta.getInstance().getPrograma(l.get(i).getId());
+
 			System.out.println(p.getNombre());
 			System.out.println("\tId: " + p.getIdentificador());
 			System.out.println("\tURL Portada: " + p.getUrlPortada());
@@ -237,7 +230,6 @@ public class ServicioALaCarta {
 			System.out.println("\tNum. emisiones: " + p.getEmision().size());
 		}
 
-		System.out.println(ServicioALaCarta.getInstance().getProgramaAtom(
-				l.get(0).getId()));
+		System.out.println(ServicioALaCarta.getInstance().getProgramaAtom(l.get(0).getId()));
 	}
 }
