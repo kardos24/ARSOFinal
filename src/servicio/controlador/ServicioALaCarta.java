@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -168,14 +169,17 @@ public class ServicioALaCarta {
 	// ///////////////////// GESTIÓN FAVORITOS /////////////////////////////
 	public String crearFavoritos() throws JAXBException {
 		Favoritos fav = new Favoritos();
-		marshallerFavoritos.marshal(fav,
-				new File(getPathFavoritos(fav.getId())));
-		return fav.getId();
+		String id = UUID.randomUUID().toString();
+
+		marshallerFavoritos.marshal(fav, new File(getPathFavoritos(id)));
+
+		return id;
 	}
 
 	public boolean addProgramaFavorito(String idFavoritos, String idPrograma)
 			throws JAXBException {
 		Favoritos fav = getFavoritos(idFavoritos);
+
 		List<ProgramaResultado> listProgram = getListadoProgramas();
 		Optional<ProgramaResultado> program = listProgram.stream()
 				.filter(id -> id.getId().equals(idPrograma)).findAny();
@@ -193,6 +197,7 @@ public class ServicioALaCarta {
 	public boolean removeProgramaFavorito(String idFavoritos, String idPrograma)
 			throws JAXBException {
 		Favoritos fav = getFavoritos(idFavoritos);
+
 		List<ProgramaResultado> listProgram = getListadoProgramas();
 		Optional<ProgramaResultado> program = listProgram.stream()
 				.filter(id -> id.getId().equals(idPrograma)).findAny();
@@ -209,6 +214,7 @@ public class ServicioALaCarta {
 
 	public Favoritos getFavoritos(String idFavoritos) throws JAXBException {
 		File fileFav = new File(getPathFavoritos(idFavoritos));
+
 		if (fileFav.exists()) {
 			return (Favoritos) unmarshallerFavoritos.unmarshal(fileFav);
 		} else {
@@ -225,15 +231,19 @@ public class ServicioALaCarta {
 	}
 
 	public static void main(String[] args) throws Exception {
-		List<ProgramaResultado> l = ServicioALaCarta.getInstance()
-				.getListadoProgramas();
+		ServicioALaCarta servicio = ServicioALaCarta.getInstance();
+
+		List<ProgramaResultado> l = servicio.getListadoProgramas();
+
+		System.out.println("Resultado del listado SAX:");
 		for (ProgramaResultado programa : l) {
 			System.out.println(programa.getTitulo() + " - " + programa.getId());
 		}
+		System.out.println();
 
+		System.out.println("Listado de programas:");
 		for (int i = 0; i < 5; i++) {
-			TipoPrograma p = ServicioALaCarta.getInstance().getPrograma(
-					l.get(i).getId());
+			TipoPrograma p = servicio.getPrograma(l.get(i).getId());
 
 			System.out.println(p.getNombre());
 			System.out.println("\tId: " + p.getIdentificador());
@@ -241,8 +251,25 @@ public class ServicioALaCarta {
 			System.out.println("\tURL Programa: " + p.getUrlPrograma());
 			System.out.println("\tNum. emisiones: " + p.getEmision().size());
 		}
+		System.out.println();
 
-		System.out.println(ServicioALaCarta.getInstance().getProgramaAtom(
-				l.get(0).getId()));
+		System.out.println("Listado de Atom del primer elemento:");
+		System.out.println(servicio.getProgramaAtom(l.get(0).getId()));
+		System.out.println();
+
+		String idFav = servicio.crearFavoritos();
+
+		servicio.addProgramaFavorito(idFav, "aguila-roja");
+		servicio.addProgramaFavorito(idFav, "acacias-38");
+
+		Favoritos f = servicio.getFavoritos(idFav);
+
+		servicio.removeProgramaFavorito(idFav, "acacias-38");
+
+		System.out.println("Manejo de favoritos:");
+		for (ProgramaResultado prog : f.getProgramList()) {
+			System.out.println(prog.getTitulo() + " - " + prog.getId());
+		}
+		System.out.println();
 	}
 }

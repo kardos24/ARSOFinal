@@ -19,4 +19,7 @@ public class ListadoProgramas {
 		this.programList = programList;
 	}
 
+	public List<ProgramaResultado> getProgramList() {
+		return programList;
+	}
 }

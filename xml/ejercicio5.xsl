@@ -42,9 +42,7 @@
 			<updated>
 				<xsl:value-of select="e:fecha" />
 			</updated>
-			<summary>
-				Tiempo de emisión: <xsl:value-of select="e:tiempo-emision" />
-			</summary>
+			<summary>Tiempo de emisión: <xsl:value-of select="e:tiempo-emision" /></summary>
 			<author>
 				<name>Televisión Española</name>
 			</author>
