@@ -1,5 +1,6 @@
 package modelo;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,12 +24,19 @@ public class Favoritos {
 	
 	public Favoritos(){
 		id = UUID.randomUUID().toString();
+//		programList = new LinkedList<>();
+	}
+	public Favoritos(String id){
+		this.id = id;
 	}
 	
 	public String getId() {
 		return id;
 	}
 	public List<ProgramaResultado> getProgramList() {
+		if(programList == null){
+			programList = new LinkedList<>();
+		}
 		return programList;
 	}
 	public void setProgramList(List<ProgramaResultado> programList) {
