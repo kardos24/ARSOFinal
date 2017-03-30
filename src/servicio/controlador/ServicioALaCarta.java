@@ -181,17 +181,37 @@ public class ServicioALaCarta {
 		Favoritos fav = getFavoritos(idFavoritos);
 
 		List<ProgramaResultado> listProgram = getListadoProgramas();
-		Optional<ProgramaResultado> program = listProgram.stream()
-				.filter(id -> id.getId().equals(idPrograma)).findAny();
 
-		if (program.isPresent()) {
-			Boolean addResult = fav.getProgramList().add(program.get());
+		Iterator<ProgramaResultado> it = listProgram.iterator();
+		ProgramaResultado coincidente = null, temp;
+
+		while (coincidente == null && it.hasNext()) {
+			temp = it.next();
+			if (temp.getTitulo().equals(idPrograma)) {
+				coincidente = temp;
+			}
+		}
+
+		if (coincidente != null) {
+			Boolean addResult = fav.getProgramList().add(coincidente);
 			marshallerFavoritos.marshal(fav,
 					new File(getPathFavoritos(fav.getId())));
 			return addResult;
 		} else {
 			return false;
 		}
+
+		/*
+		 * Optional<ProgramaResultado> program = listProgram.stream() .filter(id
+		 * -> id.getId().equals(idPrograma)).findAny();
+		 * 
+		 * 
+		 * if (program.isPresent()) { Boolean addResult =
+		 * fav.getProgramList().add(program.get());
+		 * marshallerFavoritos.marshal(fav, new
+		 * File(getPathFavoritos(fav.getId()))); return addResult; } else {
+		 * return false; }
+		 */
 	}
 
 	public boolean removeProgramaFavorito(String idFavoritos, String idPrograma)
@@ -199,17 +219,37 @@ public class ServicioALaCarta {
 		Favoritos fav = getFavoritos(idFavoritos);
 
 		List<ProgramaResultado> listProgram = getListadoProgramas();
-		Optional<ProgramaResultado> program = listProgram.stream()
-				.filter(id -> id.getId().equals(idPrograma)).findAny();
 
-		if (program.isPresent()) {
-			Boolean removeResult = fav.getProgramList().remove(program.get());
+		Iterator<ProgramaResultado> it = listProgram.iterator();
+		ProgramaResultado coincidente = null, temp;
+
+		while (coincidente == null && it.hasNext()) {
+			temp = it.next();
+			if (temp.getTitulo().equals(idPrograma)) {
+				coincidente = temp;
+			}
+		}
+
+		if (coincidente != null) {
+			Boolean addResult = fav.getProgramList().remove(coincidente);
 			marshallerFavoritos.marshal(fav,
 					new File(getPathFavoritos(fav.getId())));
-			return removeResult;
+			return addResult;
 		} else {
 			return false;
 		}
+
+		/*
+		 * List<ProgramaResultado> listProgram = getListadoProgramas();
+		 * Optional<ProgramaResultado> program = listProgram.stream() .filter(id
+		 * -> id.getId().equals(idPrograma)).findAny();
+		 * 
+		 * if (program.isPresent()) { Boolean removeResult =
+		 * fav.getProgramList().remove(program.get());
+		 * marshallerFavoritos.marshal(fav, new
+		 * File(getPathFavoritos(fav.getId()))); return removeResult; } else {
+		 * return false; }
+		 */
 	}
 
 	public Favoritos getFavoritos(String idFavoritos) throws JAXBException {
