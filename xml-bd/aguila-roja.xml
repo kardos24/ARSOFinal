@@ -1,5 +1,7 @@
 <?xml version="1.0" ?>
-<programa identificador="aguila-roja">
+<programa xmlns="http://www.example.org/ejercicio2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.example.org/ejercicio2 ejercicio2.xsd"
+	identificador="aguila-roja">
 	<nombre>�guila Roja</nombre>
 	<url-programa>/m/alacarta/videos/aguila-roja/?media=tve</url-programa>
 	<url-portada>http://img.rtve.es/imagenes/aguila-roja/1412769760573.png

@@ -1,5 +1,7 @@
 <?xml version="1.0" ?>
-<programa identificador="alaska-y-segura">
+<programa xmlns="http://www.example.org/ejercicio2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.example.org/ejercicio2 ejercicio2.xsd"
+	identificador="alaska-y-segura">
 	<nombre>Alaska y Segura</nombre>
 	<url-programa>/m/alacarta/videos/alaska-y-segura/?media=tve
 	</url-programa>

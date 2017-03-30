@@ -1,5 +1,7 @@
 <?xml version="1.0" ?>
-<programa identificador="al-filo-de-la-ley">
+<programa xmlns="http://www.example.org/ejercicio2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.example.org/ejercicio2 ejercicio2.xsd"
+	identificador="al-filo-de-la-ley">
 	<nombre>Al filo de la ley </nombre>
 	<url-programa>/m/alacarta/videos/al-filo-de-la-ley/?media=tve
 	</url-programa>

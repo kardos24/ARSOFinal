@@ -45,7 +45,8 @@ public class ServicioALaCarta {
 	// Bloque de codigo que comprueba si existen las carpetas xml y xml-bd
 	// En caso que no existan, las crean.
 	static {
-		File[] folders = { new File("xml"), new File(XML_BD), new File(XML_BD + "/" + FOLDER_FAV) };
+		File[] folders = { new File("xml"), new File(XML_BD),
+				new File(XML_BD + "/" + FOLDER_FAV) };
 
 		for (File folder : folders) {
 			if (!folder.exists())
@@ -69,7 +70,8 @@ public class ServicioALaCarta {
 			unmarshallerProgram = contextP.createUnmarshaller();
 			marshallerProgram = contextP.createMarshaller();
 			marshallerProgram.setProperty("jaxb.formatted.output", true);
-			marshallerProgram.setProperty("jaxb.schemaLocation", "http://www.um.es/as xml/ejercicio2.xsd");
+			marshallerProgram.setProperty("jaxb.schemaLocation",
+					"http://www.example.org/ejercicio2 xml/ejercicio2.xsd");
 
 			JAXBContext contextF = JAXBContext.newInstance(Favoritos.class);
 			unmarshallerFavoritos = contextF.createUnmarshaller();
@@ -97,25 +99,26 @@ public class ServicioALaCarta {
 		}
 	}
 
-	public TipoPrograma getPrograma(String id)
-			throws IllegalArgumentException, JAXBException, UnsupportedEncodingException, FileNotFoundException {
+	public TipoPrograma getPrograma(String id) throws IllegalArgumentException,
+			JAXBException, UnsupportedEncodingException, FileNotFoundException {
 		File program = recuperarPrograma(id);
 
 		// Para poner la codificacion UTF-8
 		InputStream is = new FileInputStream(program);
 		InputStreamReader isr = new InputStreamReader(is, "UTF-8");
-		
-//		Object obj = unmarshallerProgram.unmarshal(isr);
-//
-//		return (TipoPrograma) obj;
-		
-		return (TipoPrograma) JAXBIntrospector.getValue(unmarshallerProgram.unmarshal(isr));
+
+		// Object obj = unmarshallerProgram.unmarshal(isr);
+		// return (TipoPrograma) obj;
+
+		return (TipoPrograma) JAXBIntrospector.getValue(unmarshallerProgram
+				.unmarshal(isr));
 	}
 
 	public String getProgramaAtom(String id) throws Exception {
 		TipoPrograma program = getPrograma(id);
 		TransformerFactory factoria = TransformerFactory.newInstance();
-		Transformer transformador = factoria.newTransformer(new StreamSource("xml/ejercicio5.xsl"));
+		Transformer transformador = factoria.newTransformer(new StreamSource(
+				"xml/ejercicio5.xsl"));
 
 		StringWriter contenido = new StringWriter();
 
@@ -128,7 +131,8 @@ public class ServicioALaCarta {
 	}
 
 	public TipoPrograma getProgramaFiltrado(String id, String titulo)
-			throws IllegalArgumentException, JAXBException, UnsupportedEncodingException, FileNotFoundException {
+			throws IllegalArgumentException, JAXBException,
+			UnsupportedEncodingException, FileNotFoundException {
 		TipoPrograma programResult;
 		programResult = getPrograma(id);
 		Iterator<TipoEmision> it = programResult.getEmision().iterator();
@@ -149,7 +153,8 @@ public class ServicioALaCarta {
 		File file = new File(getPathProgram(id));
 		// Si no existe se recupera
 		// Si existe y es antiguo, mayor a un 1 día también se recupera
-		if (!file.exists() || new Date(file.lastModified()).before(Utilidades.ayer())) {
+		if (!file.exists()
+				|| new Date(file.lastModified()).before(Utilidades.ayer())) {
 			AnalizadorDOM.getListProgramDOM(id);
 			file = new File(getPathProgram(id));
 			if (!file.exists()) {
@@ -163,34 +168,39 @@ public class ServicioALaCarta {
 	// ///////////////////// GESTIÓN FAVORITOS /////////////////////////////
 	public String crearFavoritos() throws JAXBException {
 		Favoritos fav = new Favoritos();
-		marshallerFavoritos.marshal(fav, new File(getPathFavoritos(fav.getId())));
+		marshallerFavoritos.marshal(fav,
+				new File(getPathFavoritos(fav.getId())));
 		return fav.getId();
 	}
 
-	public boolean addProgramaFavorito(String idFavoritos, String idPrograma) throws JAXBException {
+	public boolean addProgramaFavorito(String idFavoritos, String idPrograma)
+			throws JAXBException {
 		Favoritos fav = getFavoritos(idFavoritos);
 		List<ProgramaResultado> listProgram = getListadoProgramas();
-		Optional<ProgramaResultado> program = listProgram.stream().filter(id -> id.getId().equals(idPrograma))
-				.findAny();
+		Optional<ProgramaResultado> program = listProgram.stream()
+				.filter(id -> id.getId().equals(idPrograma)).findAny();
 
 		if (program.isPresent()) {
 			Boolean addResult = fav.getProgramList().add(program.get());
-			marshallerFavoritos.marshal(fav, new File(getPathFavoritos(fav.getId())));
+			marshallerFavoritos.marshal(fav,
+					new File(getPathFavoritos(fav.getId())));
 			return addResult;
 		} else {
 			return false;
 		}
 	}
 
-	public boolean removeProgramaFavorito(String idFavoritos, String idPrograma) throws JAXBException {
+	public boolean removeProgramaFavorito(String idFavoritos, String idPrograma)
+			throws JAXBException {
 		Favoritos fav = getFavoritos(idFavoritos);
 		List<ProgramaResultado> listProgram = getListadoProgramas();
-		Optional<ProgramaResultado> program = listProgram.stream().filter(id -> id.getId().equals(idPrograma))
-				.findAny();
+		Optional<ProgramaResultado> program = listProgram.stream()
+				.filter(id -> id.getId().equals(idPrograma)).findAny();
 
 		if (program.isPresent()) {
 			Boolean removeResult = fav.getProgramList().remove(program.get());
-			marshallerFavoritos.marshal(fav, new File(getPathFavoritos(fav.getId())));
+			marshallerFavoritos.marshal(fav,
+					new File(getPathFavoritos(fav.getId())));
 			return removeResult;
 		} else {
 			return false;
@@ -215,13 +225,15 @@ public class ServicioALaCarta {
 	}
 
 	public static void main(String[] args) throws Exception {
-		List<ProgramaResultado> l = ServicioALaCarta.getInstance().getListadoProgramas();
+		List<ProgramaResultado> l = ServicioALaCarta.getInstance()
+				.getListadoProgramas();
 		for (ProgramaResultado programa : l) {
 			System.out.println(programa.getTitulo() + " - " + programa.getId());
 		}
 
 		for (int i = 0; i < 5; i++) {
-			TipoPrograma p = ServicioALaCarta.getInstance().getPrograma(l.get(i).getId());
+			TipoPrograma p = ServicioALaCarta.getInstance().getPrograma(
+					l.get(i).getId());
 
 			System.out.println(p.getNombre());
 			System.out.println("\tId: " + p.getIdentificador());
@@ -230,6 +242,7 @@ public class ServicioALaCarta {
 			System.out.println("\tNum. emisiones: " + p.getEmision().size());
 		}
 
-		System.out.println(ServicioALaCarta.getInstance().getProgramaAtom(l.get(0).getId()));
+		System.out.println(ServicioALaCarta.getInstance().getProgramaAtom(
+				l.get(0).getId()));
 	}
 }

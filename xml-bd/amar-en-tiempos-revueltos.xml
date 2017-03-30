@@ -1,5 +1,7 @@
 <?xml version="1.0" ?>
-<programa identificador="amar-en-tiempos-revueltos">
+<programa xmlns="http://www.example.org/ejercicio2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.example.org/ejercicio2 ejercicio2.xsd"
+	identificador="amar-en-tiempos-revueltos">
 	<nombre>Amar en tiempos revueltos</nombre>
 	<url-programa>/m/alacarta/videos/amar-en-tiempos-revueltos/?media=tve
 	</url-programa>
