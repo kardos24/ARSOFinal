@@ -13,8 +13,7 @@
 		<title>
 			<xsl:value-of select="e:nombre" />
 		</title>
-		<link href="" rel="self" />
-		<link href="{e:url-programa}" />
+		<link href="{e:url-programa}" rel="self" />
 		<updated>
 			<xsl:value-of select="e:emision[1]/e:fecha" />
 		</updated>

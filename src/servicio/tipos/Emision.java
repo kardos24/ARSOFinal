@@ -2,7 +2,7 @@
 // Este archivo ha sido generado por la arquitectura JavaTM para la implantación de la referencia de enlace (JAXB) XML v2.2.8-b130911.1802 
 // Visite <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el esquema de origen. 
-// Generado el: 2017.03.30 a las 12:46:58 AM CEST 
+// Generado el: 2017.04.29 a las 06:55:04 PM CEST 
 //
 
 
@@ -17,18 +17,18 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 
 /**
- * <p>Clase Java para tipo_emision complex type.
+ * <p>Clase Java para emision complex type.
  * 
  * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
- * &lt;complexType name="tipo_emision">
+ * &lt;complexType name="emision">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="titulo" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="fecha" type="{http://www.w3.org/2001/XMLSchema}date"/>
- *         &lt;element name="tiempo-emision" type="{http://www.example.org/ejercicio2}tipo_hora"/>
+ *         &lt;element name="tiempo-emision" type="{http://www.example.org/programacionRTVE}duracion"/>
  *         &lt;element name="url-emision" type="{http://www.w3.org/2001/XMLSchema}anyURI"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
@@ -39,13 +39,13 @@ import javax.xml.datatype.XMLGregorianCalendar;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "tipo_emision", propOrder = {
+@XmlType(name = "emision", propOrder = {
     "titulo",
     "fecha",
     "tiempoEmision",
     "urlEmision"
 })
-public class TipoEmision {
+public class Emision {
 
     @XmlElement(required = true)
     protected String titulo;

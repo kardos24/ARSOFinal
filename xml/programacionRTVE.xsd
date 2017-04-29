@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/programacionRTVE"
+	xmlns:tns="http://www.example.org/programacionRTVE" elementFormDefault="qualified">
+
+	<simpleType name="duracion">
+		<restriction base="string">
+			<pattern value="(\d+:)?[0-5]\d:[0-5]\d" />
+		</restriction>
+	</simpleType>
+
+	<complexType name="emision">
+		<sequence>
+			<element name="titulo" type="string" />
+			<element name="fecha" type="date" />
+			<element name="tiempo-emision" type="tns:duracion" />
+			<element name="url-emision" type="anyURI" />
+		</sequence>
+	</complexType>
+
+	<complexType name="producto">
+		<sequence>
+			<element name="titulo" type="string" />
+			<element name="url-imagen-peque" type="anyURI" />
+			<element name="url-imagen-grande" type="anyURI" />
+			<element name="precio-mas-bajo" type="decimal" />
+			<element name="url-informacion" type="anyURI" />
+		</sequence>
+		<attribute name="asin" type="string" use="required" />
+	</complexType>
+
+	<element name="programa">
+		<complexType>
+			<sequence>
+				<element name="nombre" type="string" />
+				<element name="url-programa" type="anyURI" />
+				<element name="url-portada" type="anyURI" />
+				<element name="emision" minOccurs="1" maxOccurs="unbounded"
+					type="tns:emision" />
+				<element name="producto" minOccurs="0" maxOccurs="unbounded" />
+			</sequence>
+			<attribute name="identificador" type="string" use="required" />
+		</complexType>
+	</element>
+</schema>

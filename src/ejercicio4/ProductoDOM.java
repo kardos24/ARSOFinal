@@ -1,6 +1,6 @@
 package ejercicio4;
 
-public class ProductoAmazonDOM {
+public class ProductoDOM {
 	private String asin;
 	private String titulo;
 	private String imagenPeque;
@@ -8,7 +8,7 @@ public class ProductoAmazonDOM {
 	private double precioMin;
 	private String url;
 
-	public ProductoAmazonDOM(String asin, String titulo, String imagenPeque, String imagenGrande, double precioMin,
+	public ProductoDOM(String asin, String titulo, String imagenPeque, String imagenGrande, double precioMin,
 			String url) {
 		this.asin = asin;
 		this.titulo = titulo;

@@ -18,11 +18,17 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import servicio.utilidades.Utilidades;
@@ -31,6 +37,8 @@ import servicio.utilidades.SignedRequestsHelper;
 import static servicio.utilidades.Constantes.*;
 
 public class AnalizadorDOM {
+	private static DocumentBuilderFactory factoria = DocumentBuilderFactory.newInstance();
+
 	public static void main(String[] args) throws Exception {
 		getListProgramDOM(5);
 	}
@@ -49,8 +57,6 @@ public class AnalizadorDOM {
 
 	private static void getListProgramDOM(Integer max, String id) {
 		try {
-			DocumentBuilderFactory factoria = DocumentBuilderFactory.newInstance();
-
 			DocumentBuilder analizador;
 			analizador = factoria.newDocumentBuilder();
 
@@ -75,7 +81,7 @@ public class AnalizadorDOM {
 				NodeList nl = elementos.item(i).getChildNodes();
 
 				List<EmisionDOM> emisiones = null;
-				List<ProductoAmazonDOM> productos = null;
+				List<ProductoDOM> productos = null;
 				String identificador = null, nombre = null, urlPrograma = null, urlImagen = null;
 
 				for (int j = 0; j < nl.getLength(); j++) {
@@ -96,6 +102,7 @@ public class AnalizadorDOM {
 				}
 				if (identificador != null && (id == null || Objects.equals(identificador, id))) {
 					emisiones = getBroadcastFromChannel(identificador, 1);
+					// TODO coger la lista de productos de Amazon
 					writeXMLWithStax(identificador, nombre, urlPrograma, urlImagen, emisiones);
 				}
 			}
@@ -115,10 +122,10 @@ public class AnalizadorDOM {
 		writer.writeStartElement("programa");
 
 		// > Espacio de nombres por omisión
-		writer.writeNamespace("", "http://www.example.org/ejercicio2");
+		writer.writeNamespace("", "http://www.example.org/programacionRTVE");
 		writer.writeNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
 		writer.writeAttribute("http://www.w3.org/2001/XMLSchema-instance", "schemaLocation",
-				"http://www.example.org/ejercicio2 ejercicio2.xsd");
+				"http://www.example.org/programacionRTVE programacionRTVE.xsd");
 
 		writer.writeAttribute("identificador", identificador);
 
@@ -156,6 +163,8 @@ public class AnalizadorDOM {
 			writer.writeEndElement(); // emision
 		}
 
+		// TODO for (ProductoAmazonDOM p : productos) {...}
+
 		writer.writeEndElement(); // programa
 		writer.writeEndDocument();
 
@@ -182,8 +191,6 @@ public class AnalizadorDOM {
 		try {
 			if (numPage == null)
 				numPage = 1;
-
-			DocumentBuilderFactory factoria = DocumentBuilderFactory.newInstance();
 
 			DocumentBuilder analizador;
 			analizador = factoria.newDocumentBuilder();
@@ -265,8 +272,8 @@ public class AnalizadorDOM {
 		return emisionList;
 	}
 
-	private List<ProductoAmazonDOM> getProductsFromAmazon(String product) {
-		List<ProductoAmazonDOM> productList = new LinkedList<>();
+	private List<ProductoDOM> getProductsFromAmazon(String product) {
+		List<ProductoDOM> productList = new LinkedList<>();
 		SignedRequestsHelper helper;
 
 		try {
@@ -275,8 +282,6 @@ public class AnalizadorDOM {
 			e.printStackTrace();
 			return null;
 		}
-
-		String requestUrl = null;
 
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("Service", "AWSECommerceService");
@@ -287,9 +292,22 @@ public class AnalizadorDOM {
 		params.put("Title", product);
 		params.put("ResponseGroup", "Large");
 
-		requestUrl = helper.sign(params);
+		String requestUrl = helper.sign(params);
 
-		// TODO Pasar requestUrl al arbol DOM y pasarle las consultas XPath...
+		XPathFactory factoria = XPathFactory.newInstance();
+		XPath xpath = factoria.newXPath();
+
+		try {
+			// FIXME Aun no funciona bien del todo...
+			XPathExpression consulta = xpath.compile("//nif");
+
+			NodeList resultado = (NodeList) consulta.evaluate(new InputSource(requestUrl), XPathConstants.NODESET);
+
+			// TODO Crear los distintos productos y devolver la lista...
+
+		} catch (XPathExpressionException e) {
+			e.printStackTrace();
+		}
 
 		return productList;
 	}

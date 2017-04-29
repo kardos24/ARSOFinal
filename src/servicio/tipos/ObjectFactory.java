@@ -2,22 +2,19 @@
 // Este archivo ha sido generado por la arquitectura JavaTM para la implantación de la referencia de enlace (JAXB) XML v2.2.8-b130911.1802 
 // Visite <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el esquema de origen. 
-// Generado el: 2017.03.30 a las 12:46:58 AM CEST 
+// Generado el: 2017.04.29 a las 06:55:04 PM CEST 
 //
 
 
 package servicio.tipos;
 
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.annotation.XmlElementDecl;
 import javax.xml.bind.annotation.XmlRegistry;
-import javax.xml.namespace.QName;
 
 
 /**
  * This object contains factory methods for each 
  * Java content interface and Java element interface 
- * generated in the programs package. 
+ * generated in the servicio.tipos package. 
  * <p>An ObjectFactory allows you to programatically 
  * construct new instances of the Java representation 
  * for XML content. The Java representation of XML 
@@ -31,38 +28,36 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _Programa_QNAME = new QName("http://www.example.org/ejercicio2", "programa");
 
     /**
-     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: programs
+     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: servicio.tipos
      * 
      */
     public ObjectFactory() {
     }
 
     /**
-     * Create an instance of {@link TipoPrograma }
+     * Create an instance of {@link Programa }
      * 
      */
-    public TipoPrograma createTipoPrograma() {
-        return new TipoPrograma();
+    public Programa createPrograma() {
+        return new Programa();
     }
 
     /**
-     * Create an instance of {@link TipoEmision }
+     * Create an instance of {@link Emision }
      * 
      */
-    public TipoEmision createTipoEmision() {
-        return new TipoEmision();
+    public Emision createEmision() {
+        return new Emision();
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link TipoPrograma }{@code >}}
+     * Create an instance of {@link Producto }
      * 
      */
-    @XmlElementDecl(namespace = "http://www.example.org/ejercicio2", name = "programa")
-    public JAXBElement<TipoPrograma> createPrograma(TipoPrograma value) {
-        return new JAXBElement<TipoPrograma>(_Programa_QNAME, TipoPrograma.class, null, value);
+    public Producto createProducto() {
+        return new Producto();
     }
 
 }
