@@ -110,7 +110,7 @@ public class ServicioALaCarta {
 	public String getProgramaAtom(String id) throws Exception {
 		Programa program = getPrograma(id);
 		TransformerFactory factoria = TransformerFactory.newInstance();
-		Transformer transformador = factoria.newTransformer(new StreamSource("xml/ejercicio5.xsl"));
+		Transformer transformador = factoria.newTransformer(new StreamSource("xml/programacionRTVE-atom.xsl"));
 
 		StringWriter contenido = new StringWriter();
 
@@ -248,7 +248,7 @@ public class ServicioALaCarta {
 		System.out.println();
 
 		System.out.println("Listado de programas:");
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 2; i++) {
 			Programa p = servicio.getPrograma(l.get(i).getId());
 			
 			System.out.println(p.getNombre());
@@ -267,7 +267,7 @@ public class ServicioALaCarta {
 
 		servicio.addProgramaFavorito(idFav, "aguila-roja");
 		servicio.addProgramaFavorito(idFav, "acacias-38");
-		servicio.addProgramaFavorito(idFav, "al-filo-de-la-ley");
+		//servicio.addProgramaFavorito(idFav, "al-filo-de-la-ley");
 
 		servicio.removeProgramaFavorito(idFav, "acacias-38");
 

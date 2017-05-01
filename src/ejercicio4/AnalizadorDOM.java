@@ -32,6 +32,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import servicio.utilidades.Utilidades;
+import servicio.utilidades.EspacioNombreAmazon;
 import servicio.utilidades.SignedRequestsHelper;
 
 import static servicio.utilidades.Constantes.*;
@@ -102,8 +103,8 @@ public class AnalizadorDOM {
 				}
 				if (identificador != null && (id == null || Objects.equals(identificador, id))) {
 					emisiones = getBroadcastFromChannel(identificador, 1);
-					// TODO coger la lista de productos de Amazon
-					writeXMLWithStax(identificador, nombre, urlPrograma, urlImagen, emisiones);
+					productos = getProductsFromAmazon(nombre);
+					writeXMLWithStax(identificador, nombre, urlPrograma, urlImagen, emisiones, productos);
 				}
 			}
 
@@ -114,7 +115,7 @@ public class AnalizadorDOM {
 	}
 
 	private static void writeXMLWithStax(String identificador, String nombre, String urlPrograma, String urlImagen,
-			List<EmisionDOM> emisiones) throws FileNotFoundException, XMLStreamException {
+			List<EmisionDOM> emisiones, List<ProductoDOM> productos) throws FileNotFoundException, XMLStreamException {
 		XMLOutputFactory xof = XMLOutputFactory.newInstance();
 		XMLStreamWriter writer = xof.createXMLStreamWriter(new FileOutputStream("xml-bd/" + identificador + ".xml"));
 
@@ -163,7 +164,31 @@ public class AnalizadorDOM {
 			writer.writeEndElement(); // emision
 		}
 
-		// TODO for (ProductoAmazonDOM p : productos) {...}
+		for (ProductoDOM p : productos) {
+			writer.writeStartElement("producto");
+
+			writer.writeStartElement("titulo");
+			writer.writeCharacters(p.getTitulo());
+			writer.writeEndElement(); // titulo
+
+			writer.writeStartElement("url-imagen-peque");
+			writer.writeCharacters(p.getImagenPeque());
+			writer.writeEndElement(); // url-imagen-peque
+
+			writer.writeStartElement("url-imagen-grande");
+			writer.writeCharacters(p.getImagenGrande());
+			writer.writeEndElement(); // url-imagen-grande
+
+			writer.writeStartElement("precio-mas-bajo");
+			writer.writeCharacters(Double.toString(p.getPrecioMin()));
+			writer.writeEndElement(); // precio-mas-bajo
+
+			writer.writeStartElement("url-informacion");
+			writer.writeCharacters(p.getUrl());
+			writer.writeEndElement(); // url-informacion
+
+			writer.writeEndElement(); // producto
+		}
 
 		writer.writeEndElement(); // programa
 		writer.writeEndDocument();
@@ -272,7 +297,8 @@ public class AnalizadorDOM {
 		return emisionList;
 	}
 
-	private List<ProductoDOM> getProductsFromAmazon(String product) {
+	private static List<ProductoDOM> getProductsFromAmazon(String product) {
+		System.out.println(product);
 		List<ProductoDOM> productList = new LinkedList<>();
 		SignedRequestsHelper helper;
 
@@ -296,14 +322,49 @@ public class AnalizadorDOM {
 
 		XPathFactory factoria = XPathFactory.newInstance();
 		XPath xpath = factoria.newXPath();
+		xpath.setNamespaceContext(new EspacioNombreAmazon());
 
 		try {
-			// FIXME Aun no funciona bien del todo...
-			XPathExpression consulta = xpath.compile("//nif");
+			XPathExpression consulta = xpath.compile("//a:Items/a:Item");
 
 			NodeList resultado = (NodeList) consulta.evaluate(new InputSource(requestUrl), XPathConstants.NODESET);
+			String asin, titulo, imgPeque, imgGrande, url;
+			double precio;
 
-			// TODO Crear los distintos productos y devolver la lista...
+			for (int i = 0; i < resultado.getLength(); i++) {
+				Element e;
+
+				consulta = xpath.compile("a:ASIN");
+				e = (Element) consulta.evaluate(resultado.item(i), XPathConstants.NODE);
+				asin = e.getTextContent();
+
+				consulta = xpath.compile("a:ItemAttributes/a:Title");
+				e = (Element) consulta.evaluate(resultado.item(i), XPathConstants.NODE);
+				titulo = e.getTextContent();
+
+				consulta = xpath.compile("a:SmallImage/a:URL");
+				e = (Element) consulta.evaluate(resultado.item(i), XPathConstants.NODE);
+				imgPeque = e.getTextContent();
+
+				consulta = xpath.compile("a:LargeImage/a:URL");
+				e = (Element) consulta.evaluate(resultado.item(i), XPathConstants.NODE);
+				imgGrande = e.getTextContent();
+
+				consulta = xpath.compile("a:OfferSummary/a:LowestNewPrice/a:FormattedPrice");
+				e = (Element) consulta.evaluate(resultado.item(i), XPathConstants.NODE);
+				if (e != null) {
+					System.out.println(e.getTextContent().split(" ")[1]);
+					precio = Double.parseDouble(e.getTextContent().split(" ")[1].replaceAll(",", "."));
+				} else {
+					precio = 0.0;
+				}
+
+				consulta = xpath.compile("a:DetailPageURL");
+				e = (Element) consulta.evaluate(resultado.item(i), XPathConstants.NODE);
+				url = e.getTextContent();
+
+				productList.add(new ProductoDOM(asin, titulo, imgPeque, imgGrande, precio, url));
+			}
 
 		} catch (XPathExpressionException e) {
 			e.printStackTrace();
