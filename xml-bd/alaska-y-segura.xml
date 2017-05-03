@@ -1,0 +1,56 @@
+<?xml version="1.0" ?>
+<programa xmlns="http://www.example.org/ejercicio2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.example.org/ejercicio2 ejercicio2.xsd"
+	identificador="alaska-y-segura">
+	<nombre>Alaska y Segura</nombre>
+	<url-programa>/m/alacarta/videos/alaska-y-segura/?media=tve</url-programa>
+	<url-portada>http://img.rtve.es/imagenes/alaska-segura/1423649639233.png</url-portada>
+	<emision>
+		<titulo>Viva Bu�uel</titulo>
+		<fecha>2015-05-25</fecha>
+		<tiempo-emision>1:41:03</tiempo-emision>
+		<url-emision>/m/alacarta/videos/alaska-y-segura/alaska-segura-viva-bunuel/3141222/?media=tve</url-emision>
+	</emision>
+	<emision>
+		<titulo>Danzad malditos</titulo>
+		<fecha>2015-05-18</fecha>
+		<tiempo-emision>1:22:34</tiempo-emision>
+		<url-emision>/m/alacarta/videos/alaska-y-segura/alaska-segura-danzad-malditos/3132849/?media=tve</url-emision>
+	</emision>
+	<emision>
+		<titulo>La primera vez</titulo>
+		<fecha>2015-05-11</fecha>
+		<tiempo-emision>1:41:01</tiempo-emision>
+		<url-emision>/m/alacarta/videos/alaska-y-segura/alaska-segura-primera-vez/3124180/?media=tve</url-emision>
+	</emision>
+	<emision>
+		<titulo>La noche de los muertos vivientes</titulo>
+		<fecha>2015-05-04</fecha>
+		<tiempo-emision>1:25:01</tiempo-emision>
+		<url-emision>/m/alacarta/videos/alaska-y-segura/alaska-segura-noche-muertos-vivientes/3115898/?media=tve</url-emision>
+	</emision>
+	<emision>
+		<titulo>La bola de cristal</titulo>
+		<fecha>2015-04-20</fecha>
+		<tiempo-emision>1:41:43</tiempo-emision>
+		<url-emision>/m/alacarta/videos/alaska-y-segura/alaska-segura-bola-cristal/3099462/?media=tve</url-emision>
+	</emision>
+	<emision>
+		<titulo>La ley de la calle</titulo>
+		<fecha>2015-04-13</fecha>
+		<tiempo-emision>1:18:59</tiempo-emision>
+		<url-emision>/m/alacarta/videos/alaska-y-segura/alaska-segura-ley-calle/3089328/?media=tve</url-emision>
+	</emision>
+	<emision>
+		<titulo>Fan fatal</titulo>
+		<fecha>2015-04-06</fecha>
+		<tiempo-emision>1:14:49</tiempo-emision>
+		<url-emision>/m/alacarta/videos/alaska-y-segura/alaska-segura-fan-fatal/3077898/?media=tve</url-emision>
+	</emision>
+	<emision>
+		<titulo>Karaoke Kid</titulo>
+		<fecha>2015-03-30</fecha>
+		<tiempo-emision>1:18:55</tiempo-emision>
+		<url-emision>/m/alacarta/videos/alaska-y-segura/alaska-segura-karaoke-kid/3069819/?media=tve</url-emision>
+	</emision>
+</programa>
