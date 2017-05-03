@@ -228,11 +228,11 @@ public class ServicioALaCarta {
 		}
 	}
 
-	private String getPathFavoritos(String id) {
+	public String getPathFavoritos(String id) {
 		return XML_BD + "/" + FOLDER_FAV + "/favoritos-" + id + ".xml";
 	}
 
-	private String getPathProgram(String id) {
+	public String getPathProgram(String id) {
 		return XML_BD + "/" + id + ".xml";
 	}
 
