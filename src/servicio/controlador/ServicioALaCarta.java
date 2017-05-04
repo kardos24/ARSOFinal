@@ -129,7 +129,7 @@ public class ServicioALaCarta {
 		Iterator<Emision> it = programResult.getEmision().iterator();
 		while (it.hasNext()) {
 			String tit = it.next().getTitulo();
-			if (tit.contains(titulo)) {
+			if (!tit.contains(titulo)) {
 				it.remove();
 			}
 		}
