@@ -12,7 +12,11 @@ import ejercicio3.ProgramaResultado;
 @XmlRootElement(name = "listProgramas")
 public class ListadoProgramas {
 
-	private List<ProgramaResultado> programList;
+	private List<ProgramaResultado> programList;	
+	
+	public ListadoProgramas() {
+		super();
+	}
 
 	public ListadoProgramas(List<ProgramaResultado> programList) {
 		super();
