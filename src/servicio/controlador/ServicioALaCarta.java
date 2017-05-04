@@ -228,11 +228,11 @@ public class ServicioALaCarta {
 		}
 	}
 
-	public String getPathFavoritos(String id) {
+	private String getPathFavoritos(String id) {
 		return XML_BD + "/" + FOLDER_FAV + "/favoritos-" + id + ".xml";
 	}
 
-	public String getPathProgram(String id) {
+	private String getPathProgram(String id) {
 		return XML_BD + "/" + id + ".xml";
 	}
 
@@ -248,7 +248,7 @@ public class ServicioALaCarta {
 		System.out.println();
 
 		System.out.println("Listado de programas:");
-		for (int i = 0; i < 2; i++) {
+		for (int i = 0; i < 5; i++) {
 			Programa p = servicio.getPrograma(l.get(i).getId());
 			
 			System.out.println(p.getNombre());
@@ -267,7 +267,7 @@ public class ServicioALaCarta {
 
 		servicio.addProgramaFavorito(idFav, "aguila-roja");
 		servicio.addProgramaFavorito(idFav, "acacias-38");
-		//servicio.addProgramaFavorito(idFav, "al-filo-de-la-ley");
+		servicio.addProgramaFavorito(idFav, "al-filo-de-la-ley");
 
 		servicio.removeProgramaFavorito(idFav, "acacias-38");
 

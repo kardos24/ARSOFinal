@@ -171,17 +171,23 @@ public class AnalizadorDOM {
 			writer.writeCharacters(p.getTitulo());
 			writer.writeEndElement(); // titulo
 
-			writer.writeStartElement("url-imagen-peque");
-			writer.writeCharacters(p.getImagenPeque());
-			writer.writeEndElement(); // url-imagen-peque
+			if (p.getImagenPeque() != null) {
+				writer.writeStartElement("url-imagen-peque");
+				writer.writeCharacters(p.getImagenPeque());
+				writer.writeEndElement(); // url-imagen-peque
+			}
 
-			writer.writeStartElement("url-imagen-grande");
-			writer.writeCharacters(p.getImagenGrande());
-			writer.writeEndElement(); // url-imagen-grande
+			if (p.getImagenGrande() != null) {
+				writer.writeStartElement("url-imagen-grande");
+				writer.writeCharacters(p.getImagenGrande());
+				writer.writeEndElement(); // url-imagen-grande
+			}
 
-			writer.writeStartElement("precio-mas-bajo");
-			writer.writeCharacters(Double.toString(p.getPrecioMin()));
-			writer.writeEndElement(); // precio-mas-bajo
+			if (p.getPrecioMin() != null) {
+				writer.writeStartElement("precio-mas-bajo");
+				writer.writeCharacters(Double.toString(p.getPrecioMin()));
+				writer.writeEndElement(); // precio-mas-bajo
+			}
 
 			writer.writeStartElement("url-informacion");
 			writer.writeCharacters(p.getUrl());
@@ -334,6 +340,8 @@ public class AnalizadorDOM {
 			for (int i = 0; i < resultado.getLength(); i++) {
 				Element e;
 
+				ProductoDOM p;
+
 				consulta = xpath.compile("a:ASIN");
 				e = (Element) consulta.evaluate(resultado.item(i), XPathConstants.NODE);
 				asin = e.getTextContent();
@@ -342,28 +350,36 @@ public class AnalizadorDOM {
 				e = (Element) consulta.evaluate(resultado.item(i), XPathConstants.NODE);
 				titulo = e.getTextContent();
 
+				consulta = xpath.compile("a:DetailPageURL");
+				e = (Element) consulta.evaluate(resultado.item(i), XPathConstants.NODE);
+				url = e.getTextContent();
+
+				p = new ProductoDOM(asin, titulo, url);
+
 				consulta = xpath.compile("a:SmallImage/a:URL");
 				e = (Element) consulta.evaluate(resultado.item(i), XPathConstants.NODE);
 				imgPeque = e.getTextContent();
+
+				if (imgPeque != null)
+					p.setImagenPeque(imgPeque);
 
 				consulta = xpath.compile("a:LargeImage/a:URL");
 				e = (Element) consulta.evaluate(resultado.item(i), XPathConstants.NODE);
 				imgGrande = e.getTextContent();
 
+				if (imgGrande != null)
+					p.setImagenGrande(imgGrande);
+
 				consulta = xpath.compile("a:OfferSummary/a:LowestNewPrice/a:FormattedPrice");
 				e = (Element) consulta.evaluate(resultado.item(i), XPathConstants.NODE);
+				
 				if (e != null) {
 					System.out.println(e.getTextContent().split(" ")[1]);
 					precio = Double.parseDouble(e.getTextContent().split(" ")[1].replaceAll(",", "."));
-				} else {
-					precio = 0.0;
+					p.setPrecioMin(precio);
 				}
 
-				consulta = xpath.compile("a:DetailPageURL");
-				e = (Element) consulta.evaluate(resultado.item(i), XPathConstants.NODE);
-				url = e.getTextContent();
-
-				productList.add(new ProductoDOM(asin, titulo, imgPeque, imgGrande, precio, url));
+				productList.add(p);
 			}
 
 		} catch (XPathExpressionException e) {
