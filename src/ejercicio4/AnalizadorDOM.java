@@ -304,7 +304,6 @@ public class AnalizadorDOM {
 	}
 
 	private static List<ProductoDOM> getProductsFromAmazon(String product) {
-		System.out.println(product);
 		List<ProductoDOM> productList = new LinkedList<>();
 		SignedRequestsHelper helper;
 
@@ -330,8 +329,9 @@ public class AnalizadorDOM {
 		XPath xpath = factoria.newXPath();
 		xpath.setNamespaceContext(new EspacioNombreAmazon());
 
+		XPathExpression consulta;
 		try {
-			XPathExpression consulta = xpath.compile("//a:Items/a:Item");
+			consulta = xpath.compile("//a:Items/a:Item");
 
 			NodeList resultado = (NodeList) consulta.evaluate(new InputSource(requestUrl), XPathConstants.NODESET);
 			String asin, titulo, imgPeque, imgGrande, url;
@@ -358,23 +358,24 @@ public class AnalizadorDOM {
 
 				consulta = xpath.compile("a:SmallImage/a:URL");
 				e = (Element) consulta.evaluate(resultado.item(i), XPathConstants.NODE);
-				imgPeque = e.getTextContent();
 
-				if (imgPeque != null)
+				if (e != null) {
+					imgPeque = e.getTextContent();
 					p.setImagenPeque(imgPeque);
+				}
 
 				consulta = xpath.compile("a:LargeImage/a:URL");
 				e = (Element) consulta.evaluate(resultado.item(i), XPathConstants.NODE);
-				imgGrande = e.getTextContent();
 
-				if (imgGrande != null)
+				if (e != null) {
+					imgGrande = e.getTextContent();
 					p.setImagenGrande(imgGrande);
+				}
 
 				consulta = xpath.compile("a:OfferSummary/a:LowestNewPrice/a:FormattedPrice");
 				e = (Element) consulta.evaluate(resultado.item(i), XPathConstants.NODE);
-				
+
 				if (e != null) {
-					System.out.println(e.getTextContent().split(" ")[1]);
 					precio = Double.parseDouble(e.getTextContent().split(" ")[1].replaceAll(",", "."));
 					p.setPrecioMin(precio);
 				}
