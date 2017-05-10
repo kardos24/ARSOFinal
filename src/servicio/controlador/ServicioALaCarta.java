@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -109,8 +110,17 @@ public class ServicioALaCarta {
 
 	public String getProgramaAtom(String id) throws Exception {
 		Programa program = getPrograma(id);
+		
+		URL recurso = getClass().getResource("/programacionRTVE-atom.xsl");
+		InputStream is = null;
+
+		if (recurso != null) // La ha encontrado en el JAR
+			is = recurso.openStream();
+		else // Está en el sistema de ficheros
+			is = new FileInputStream("xml/programacionRTVE-atom.xsl");
+
 		TransformerFactory factoria = TransformerFactory.newInstance();
-		Transformer transformador = factoria.newTransformer(new StreamSource("xml/programacionRTVE-atom.xsl"));
+		Transformer transformador = factoria.newTransformer(new StreamSource(is));
 
 		StringWriter contenido = new StringWriter();
 
@@ -248,9 +258,9 @@ public class ServicioALaCarta {
 		System.out.println();
 
 		System.out.println("Listado de programas:");
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 3; i++) {
 			Programa p = servicio.getPrograma(l.get(i).getId());
-			
+
 			System.out.println(p.getNombre());
 			System.out.println("\tId: " + p.getIdentificador());
 			System.out.println("\tURL Portada: " + p.getUrlPortada());
